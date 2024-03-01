@@ -2,7 +2,7 @@
 
 namespace Core.Domain.Segment;
 
-public record WebsiteUrl
+public readonly record struct WebsiteUrl
 {
     private WebsiteUrl(string url)
     {

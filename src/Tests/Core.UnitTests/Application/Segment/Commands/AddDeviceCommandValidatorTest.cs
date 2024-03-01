@@ -20,7 +20,11 @@ public class AddDeviceCommandValidatorTest
     public async Task Validate_Should_ReturnValidationError_When_NameIsEmpty()
     {
         //Arrange
-        AddDeviceCommand command = new("", new("endpoint", "256dh", "auth"), new("Android"), 10);
+        string deviceName = "";
+        PushManager devicePushManager = PushManager.Create("Endpoint", "P256", "Auth");
+        ClientMetadata deviceClientMetadata = ClientMetadata.Create("Android");
+        int subscriberId = 10;
+        AddDeviceCommand command = new(deviceName, devicePushManager, deviceClientMetadata, subscriberId);
 
         //Act
         var result = await _validator.ValidateAsync(command, default);
@@ -33,7 +37,11 @@ public class AddDeviceCommandValidatorTest
     public async Task Validate_Should_ReturnValidationError_When_NameExceedMaxLength()
     {
         //Arrange
-        AddDeviceCommand command = new(RandomStringGenerator.Generate(100), new("endpoint", "256dh", "auth"), new("Android"), 10);
+        string deviceName = RandomStringGenerator.Generate(100);
+        PushManager devicePushManager = PushManager.Create("Endpoint", "P256", "Auth");
+        ClientMetadata deviceClientMetadata = ClientMetadata.Create("Android");
+        int subscriberId = 10;
+        AddDeviceCommand command = new(deviceName, devicePushManager, deviceClientMetadata, subscriberId);
 
         //Act
         var result = await _validator.ValidateAsync(command, default);
@@ -46,7 +54,12 @@ public class AddDeviceCommandValidatorTest
     public async Task Validate_Should_ReturnValidationError_When_SubscriberIdIsEmpty()
     {
         //Arrange
-        AddDeviceCommand command = new("fakeName", new("endpoint", "256dh", "auth"), new("Android"), 0);
+        string deviceName = "FakeName";
+        PushManager devicePushManager = PushManager.Create("Endpoint", "P256", "Auth");
+        ClientMetadata deviceClientMetadata = ClientMetadata.Create("Android");
+        int subscriberId = 0;
+
+        AddDeviceCommand command = new(deviceName, devicePushManager, deviceClientMetadata, subscriberId);
 
         //Act
         var result = await _validator.ValidateAsync(command, default);
@@ -60,8 +73,14 @@ public class AddDeviceCommandValidatorTest
     public async Task Validate_Should_ReturnValidationError_When_SubscriberIdIsInvalid()
     {
         //Arrange
-        AddDeviceCommand command = new("fakeName", new("endpoint", "256dh", "auth"), new("Android"), 12);
-        _subscriberRepository.ExistsAsync(12, default).Returns(false);
+        string deviceName = "FakeName";
+        PushManager devicePushManager = PushManager.Create("Endpoint", "P256", "Auth");
+        ClientMetadata deviceClientMetadata = ClientMetadata.Create("Android");
+        int subscriberId = 12;
+
+        AddDeviceCommand command = new(deviceName, devicePushManager, deviceClientMetadata, subscriberId);
+
+        _subscriberRepository.ExistsAsync(subscriberId, default).Returns(false);
 
         //Act
         var result = await _validator.ValidateAsync(command, default);
@@ -75,9 +94,14 @@ public class AddDeviceCommandValidatorTest
     public async Task Validate_Should_ReturnSuccess_When_InputIsValid()
     {
         //Arrange
-        AddDeviceCommand command = new("fakeName", new("endpoint", "256dh", "auth"), new("Android"), 12);
+        string deviceName = "FakeName";
+        PushManager devicePushManager = PushManager.Create("Endpoint", "P256", "Auth");
+        ClientMetadata deviceClientMetadata = ClientMetadata.Create("Android");
+        int subscriberId = 12;
 
-        _subscriberRepository.ExistsAsync(12, default).Returns(true);
+        AddDeviceCommand command = new(deviceName, devicePushManager, deviceClientMetadata, subscriberId);
+
+        _subscriberRepository.ExistsAsync(subscriberId, default).Returns(true);
         //Act
         var result = await _validator.ValidateAsync(command, default);
 

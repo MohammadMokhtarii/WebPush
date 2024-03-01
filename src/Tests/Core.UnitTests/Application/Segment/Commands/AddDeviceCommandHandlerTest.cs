@@ -25,7 +25,12 @@ public class AddDeviceCommandHandlerTest
     public async Task Handle_Should_ReturnValidationError_When_SubscriberIsInvalid()
     {
         //Arrange   
-        AddDeviceCommand command = new("test", new("endpoint", "256dh", "auth"), new("Android"), 10);
+        string deviceName = "FakeName";
+        PushManager devicePushManager = PushManager.Create("Endpoint", "P256", "Auth");
+        ClientMetadata deviceClientMetadata = ClientMetadata.Create("Android");
+        int subscriberId = 10;
+        AddDeviceCommand command = new(deviceName, devicePushManager, deviceClientMetadata, subscriberId);
+
         _subscriberRepository.FindAsync(Arg.Any<int>()).ReturnsNull();
 
         //Act
@@ -43,9 +48,16 @@ public class AddDeviceCommandHandlerTest
     public async Task Handle_Should_ReturnValidationError_When_SubscriberIsInActive()
     {
         //Arrange
-        AddDeviceCommand command = new("test", new("endpoint", "256dh", "auth"), new("Android"), 10);
         var subscriber = Subscriber.Create("Subscriber Name", "https://subscriber-url.com");
         subscriber.Data.DeActivate();
+
+        string deviceName = "FakeName";
+        PushManager devicePushManager = PushManager.Create("Endpoint", "P256", "Auth");
+        ClientMetadata deviceClientMetadata = ClientMetadata.Create("Android");
+        int subscriberId = subscriber.Data.Id;
+
+        AddDeviceCommand command = new(deviceName, devicePushManager, deviceClientMetadata, subscriberId);
+
         _subscriberRepository.FindAsync(Arg.Any<int>()).Returns(subscriber.Data);
 
         //Act
@@ -63,10 +75,17 @@ public class AddDeviceCommandHandlerTest
     public async Task Handle_Should_ReturnValidationError_When_SaveChangesFails()
     {
         //Arrange
-        AddDeviceCommand command = new("test", new("endpoint", "256dh", "auth"), new("Android"), 10);
         var subscriber = Subscriber.Create("Subscriber Name", "https://subscriber-url.com");
+
+        string deviceName = "FakeName";
+        PushManager devicePushManager = PushManager.Create("Endpoint", "P256", "Auth");
+        ClientMetadata deviceClientMetadata = ClientMetadata.Create("Android");
+        int subscriberId = subscriber.Data.Id;
+
+        AddDeviceCommand command = new(deviceName, devicePushManager, deviceClientMetadata, subscriberId);
+
         _subscriberRepository.FindAsync(Arg.Any<int>()).Returns(subscriber.Data);
-        _uow.SaveChangesAsync(Arg.Any<CancellationToken>()).Returns(Error.Exception("SaveChangesError", "SaveChanges Error"));
+        _uow.SaveChangesAsync(Arg.Any<CancellationToken>()).Returns(UnitOfWorkErrors.SaveChangesError);
 
         //Act
         var result = await _addDeviceCommandHandler.Handle(command, default);
@@ -83,8 +102,15 @@ public class AddDeviceCommandHandlerTest
     public async Task Handle_Should_ReturnDeviceId_When_SaveChangesSuccess()
     {
         //Arrange
-        AddDeviceCommand command = new("test", new("endpoint", "256dh", "auth"), new("Android"), 10);
         var subscriber = Subscriber.Create("Subscriber Name", "https://subscriber-url.com");
+
+        string deviceName = "FakeName";
+        PushManager devicePushManager = PushManager.Create("Endpoint", "P256", "Auth");
+        ClientMetadata deviceClientMetadata = ClientMetadata.Create("Android");
+        int subscriberId = subscriber.Data.Id;
+
+        AddDeviceCommand command = new(deviceName, devicePushManager, deviceClientMetadata, subscriberId);
+
         _subscriberRepository.FindAsync(Arg.Any<int>()).Returns(subscriber.Data);
         _uow.SaveChangesAsync(Arg.Any<CancellationToken>()).Returns(Result.Success());
 

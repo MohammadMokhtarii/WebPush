@@ -19,7 +19,7 @@ internal sealed class NotificationConfig : IEntityTypeConfiguration<Notification
         builder.Property(x => x.CreatedOnUtc)
                .IsRequired();
 
-        builder.OwnsOne(x => x.Body, x =>
+        builder.ComplexProperty(x => x.Body, x =>
         {
             x.Property(x => x.Title).IsRequired().IsUnicode().HasMaxLength(150);
             x.Property(x => x.Message).IsRequired().IsUnicode().HasMaxLength(500);

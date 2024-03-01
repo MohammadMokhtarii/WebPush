@@ -80,14 +80,17 @@ public class SubscriberTest
     public void AddDevice_Should_ReturnSubscriberIsInActive_When_SubscriberIsInActive()
     {
         //Arrange
-        string name = "Test";
-        string url = "https://example.com";
-        var subscriber = Subscriber.Create(name, url);
+        string subscriberName = "FakeName";
+        string subscriberUrl = "https://example.com";
+        var subscriber = Subscriber.Create(subscriberName, subscriberUrl);
         subscriber.Data.DeActivate();
 
+        string deviceName = "FakeName";
+        PushManager devicePushManager = PushManager.Create("Endpoint", "P256", "Auth");
+        ClientMetadata deviceClientMetadata = ClientMetadata.Create("Android");
 
         //Act
-        var result = subscriber.Data.AddDevice("", new("Endpoint", "P256", "Auth"), new("Android"));
+        var result = subscriber.Data.AddDevice(deviceName, devicePushManager, deviceClientMetadata);
 
         //Assert
         result.IsFailure.Should().BeTrue();
@@ -100,11 +103,16 @@ public class SubscriberTest
     public void AddDevice_Should_ReturnDeviceId_When_SubscriberIsActive()
     {
         //Arrange
-        string name = "Test";
-        string url = "https://example.com";
-        var subscriber = Subscriber.Create(name, url);
+        string subscriberName = "FakeName";
+        string subscriberUrl = "https://example.com";
+        var subscriber = Subscriber.Create(subscriberName, subscriberUrl);
+
+        string deviceName = "FakeName";
+        PushManager devicePushManager = PushManager.Create("Endpoint", "P256", "Auth");
+        ClientMetadata deviceClientMetadata = ClientMetadata.Create("Android");
+
         //Act
-        var result = subscriber.Data.AddDevice("", new("Endpoint", "P256", "Auth"), new("Android"));
+        var result = subscriber.Data.AddDevice(deviceName, devicePushManager, deviceClientMetadata);
 
         //Assert
         result.IsSucess.Should().BeTrue();

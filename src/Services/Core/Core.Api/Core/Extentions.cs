@@ -7,9 +7,9 @@ namespace Core.Api.Core;
 
 public static class Extentions
 {
-    public static ClientMetadata ClientMetadata(this HttpContext httpContext)
+    public static ClientMetadata ExtractClientMetadata(this HttpContext httpContext)
     {
-        return new("Android");
+        return ClientMetadata.Create("Android");
     }
 
     public static void MapToGrpcException(this Error error)

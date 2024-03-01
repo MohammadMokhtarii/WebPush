@@ -19,8 +19,13 @@ internal sealed class DeviceConfig : IEntityTypeConfiguration<Device>
                .IsRequired()
                .IsUnicode();
 
-        builder.OwnsOne(x => x.PushManager, x => x.ToJson());
-        builder.OwnsOne(x => x.ClientMetadata, x => x.ToJson());
+        builder.ComplexProperty(x => x.PushManager, x =>
+        {
+
+        });
+        builder.ComplexProperty(x => x.ClientMetadata, x =>
+        {
+        });
 
 
 

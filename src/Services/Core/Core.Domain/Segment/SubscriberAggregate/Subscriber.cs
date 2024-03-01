@@ -30,7 +30,7 @@ public sealed class Subscriber : Entity, IAggregateRoot
         return model;
     }
 
-    public Result<int> AddDevice(string name, PushManager pushManager, ClientMetadata clientMetadata)
+    public Result<Device> AddDevice(string name, PushManager pushManager, ClientMetadata clientMetadata)
     {
         if (InActive)
             return SegmentDomainErrors.Subscriber.SubscriberIsInActive;
@@ -39,7 +39,7 @@ public sealed class Subscriber : Entity, IAggregateRoot
 
         _devices.Add(device);
 
-        return device.Id;
+        return device;
     }
     public Result DeActivate()
     {

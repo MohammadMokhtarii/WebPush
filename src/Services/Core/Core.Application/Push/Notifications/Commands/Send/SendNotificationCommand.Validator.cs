@@ -10,7 +10,7 @@ public class SendNotificationCommandValidator : AbstractValidator<SendNotificati
         _subscriberRepository = deviceRepository;
 
         RuleFor(x => x.DeviceId).NotEmpty().WithMessage(AppResource.NotEmpty).WithErrorCode(nameof(AppResource.NotEmpty))
-                                .MustAsync(async (command, deviceId, cancellationToken) => await BeValidDevice(command.SubscriberId, deviceId, cancellationToken)).WithMessage((_, value) => string.Format(AppResource.NotFound, value)).WithErrorCode(nameof(AppResource.NotFound));
+                                .MustAsync(async (command, deviceId, cancellationToken) => await BeValidDevice(deviceId,command.SubscriberId, cancellationToken)).WithMessage((_, value) => string.Format(AppResource.NotFound, value)).WithErrorCode(nameof(AppResource.NotFound));
 
         RuleFor(x => x.Payload).ChildRules(child =>
         {

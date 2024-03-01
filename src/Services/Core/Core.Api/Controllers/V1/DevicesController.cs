@@ -12,7 +12,7 @@ public class DevicesController(ISender sender) : BaseController
 
     [HttpPost]
     public async Task<IActionResult> AddAsync(AddDeviceDto item, CancellationToken cancellationToken)
-        => Ok(await _sender.Send(new AddDeviceCommand(item.Name, item.PushManager, HttpContext.ClientMetadata(), item.SubscriberId), cancellationToken));
+        => Ok(await _sender.Send(new AddDeviceCommand(item.Name, item.PushManager, HttpContext.ExtractClientMetadata(), item.SubscriberId), cancellationToken));
 
 }
 

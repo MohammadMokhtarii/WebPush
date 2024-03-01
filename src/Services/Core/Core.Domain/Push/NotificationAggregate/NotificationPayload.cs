@@ -2,12 +2,8 @@
 
 namespace Core.Domain.Push;
 
-public record NotificationPayload
+public readonly record struct NotificationPayload
 {
-    public NotificationPayload()
-    {
-        
-    }
     public const int Title_MaxLength = 150;
     public const int Message_MaxLength = 500;
     private NotificationPayload(string title, string message)
