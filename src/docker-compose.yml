@@ -1,0 +1,16 @@
+version: "3.4"
+
+services:
+  db:
+    container_name: db
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    environment:
+      SA_PASSWORD: 1qaz@WSX3edc
+      ACCEPT_EULA: Y
+      MSSQL_TCP_PORT: 50433
+    volumes:
+      - "./App_Data/data/:/var/opt/mssql/data/"
+      - "./App_Data/log/:/var/opt/mssql/log/"
+      - "./App_Data/secrets/:/var/opt/mssql/secrets/"
+    ports:
+      - "60733:50433"
