@@ -17,6 +17,6 @@ public class AddSubscriberCommandHandler(IUnitOfWork uow, ISubscriberRepository 
         var dbResult = await _uow.SaveChangesAsync(cancellationToken);
         if (dbResult.IsFailure)
             return dbResult.Error;
-        return model.Data.Id;
+        return model.Data.Id.Value;
     }
 }

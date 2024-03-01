@@ -13,7 +13,7 @@ public class NotificationTest
     public void Create_Should_ReturnValidtionError_When_BodyInValid()
     {
         //Arrange
-        int deviceId = 10;
+        DeviceId deviceId = new DeviceId(10);
         string title = RandomStringGenerator.Generate(200);
         string message = RandomStringGenerator.Generate(100);
 
@@ -30,7 +30,7 @@ public class NotificationTest
     public void Create_Should_ReturnSuccess_When_InputIsValid()
     {
         //Arrange
-        int deviceId = 10;
+        DeviceId deviceId = new DeviceId(10);
         string title = "test notification";
         string message = "test notification message";
 
@@ -50,7 +50,7 @@ public class NotificationTest
     public void ChangeStatus_Should_AddNothing_When_NotificationStatusIsAlreadySuccessful()
     {
         //Arrange
-        int deviceId = 10;
+        DeviceId deviceId = new DeviceId(10);
         string title = "test notification";
         string message = "test notification message";
         var notification = Notification.Create(deviceId, title, message);
@@ -70,7 +70,7 @@ public class NotificationTest
     public void ChangeStatus_Should_ReturnSuccess_When_NotificationStatusIsSuccessful()
     {
         //Arrange
-        int deviceId = 10;
+        DeviceId deviceId = new DeviceId(10);
         string title = "test notification";
         string message = "test notification message";
         var notification = Notification.Create(deviceId, title, message);
@@ -88,7 +88,7 @@ public class NotificationTest
     public void ChangeStatus_Should_AddOnlyNotificationActivity_When_NotificationStatusIsFailed()
     {
         //Arrange
-        int deviceId = 10;
+        DeviceId deviceId = new DeviceId(10);
         string title = "test notification";
         string message = "test notification message";
         var notification = Notification.Create(deviceId, title, message);
@@ -104,10 +104,28 @@ public class NotificationTest
 
 
     [Fact]
-    public void AddEvent_Should_AddNotificationEvent()
+    public void AddEvent_Should_AddNotificationEvent_When_NotificationStatusIsSucessfull()
     {
         //Arrange
-        int deviceId = 10;
+        DeviceId deviceId = new DeviceId(10);
+        string title = "test notification";
+        string message = "test notification message";
+        var notification = Notification.Create(deviceId, title, message);
+        notification.Data.ChangeStatus(NotificationStatus.Successful, string.Empty);
+        
+        //Act
+        notification.Data.AddEvent(NotificationEventType.Sent);
+
+        //Assert
+
+        notification.Data.NotificationEvents.Should().HaveCountGreaterThan(1);
+    }
+
+    [Fact]
+    public void AddEvent_Should_AddNotificationEvent_When_NotificationStatusIsNotSucessfull()
+    {
+        //Arrange
+        DeviceId deviceId = new DeviceId(10);
         string title = "test notification";
         string message = "test notification message";
         var notification = Notification.Create(deviceId, title, message);
@@ -117,6 +135,6 @@ public class NotificationTest
 
         //Assert
 
-        notification.Data.NotificationEvents.Should().HaveCount(1);
+        notification.Data.NotificationEvents.Should().HaveCount(0);
     }
 }

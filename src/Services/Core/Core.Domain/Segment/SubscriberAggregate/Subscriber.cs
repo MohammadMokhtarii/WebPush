@@ -2,6 +2,7 @@
 
 namespace Core.Domain.Segment;
 
+public readonly record struct SubscriberId(int Value);
 public sealed class Subscriber : Entity, IAggregateRoot
 {
     private readonly List<Device> _devices = [];
@@ -12,7 +13,7 @@ public sealed class Subscriber : Entity, IAggregateRoot
         Url = url;
     }
     private Subscriber() { }
-    public int Id { get; private set; }
+    public SubscriberId Id { get; private set; }
     public Guid Token { get; private set; }
     public string Name { get; private set; }
     public WebsiteUrl Url { get; private set; }

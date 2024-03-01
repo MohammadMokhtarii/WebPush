@@ -1,5 +1,6 @@
 ﻿using Core.Application.Common;
 using Core.Domain.Push;
+using Core.Domain.Segment;
 
 namespace Core.Application.Push;
 public class SendNotificationCommandHandler(IUnitOfWork uow, INotificationRepository notificationRepository, IPublisher publisher) : IRequestHandler<SendNotificationCommand, Result<int>>
@@ -21,6 +22,6 @@ public class SendNotificationCommandHandler(IUnitOfWork uow, INotificationReposi
         //TODO:Will Be Removed At Final Product
         await publisher.Publish(new NotificationAddedDomainEvent(model.Data.Id), cancellationToken);
 
-        return model.Data.Id;
+        return model.Data.Id.Value;
     }
 }

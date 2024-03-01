@@ -1,2 +1,4 @@
-﻿namespace Core.Application.Segment;
-public record DeActivateSubscriberCommand(int Id) : IRequest<Result>;
+﻿using Core.Domain.Segment;
+
+namespace Core.Application.Segment;
+public record DeActivateSubscriberCommand(SubscriberId Id) : IRequest<Result>;

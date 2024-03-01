@@ -1,3 +1,3 @@
 ﻿namespace Core.Domain.Push;
 
-public sealed record NotificationAddedDomainEvent(int NotificationId) : IDomainEvent;
+public sealed record NotificationAddedDomainEvent(NotificationId NotificationId) : IDomainEvent;

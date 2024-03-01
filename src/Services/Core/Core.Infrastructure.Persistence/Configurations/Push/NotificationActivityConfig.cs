@@ -11,6 +11,7 @@ internal sealed class NotificationActivityConfig : IEntityTypeConfiguration<Noti
 
         builder.HasKey(x => x.Id).HasName($"PK_{DbConst.Push}_{nameof(NotificationActivity)}");
         builder.Property(x => x.Id)
+               .HasConversion(valueType => valueType.Value, value => new(value))
                .ValueGeneratedOnAdd();
 
         builder.Property(x => x.Description)

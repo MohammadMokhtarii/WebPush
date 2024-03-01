@@ -16,6 +16,6 @@ public sealed class GetSubscriberConfigQueryHandler(ISubscriberRepository subscr
         if (subscriber is null || subscriber.InActive)
             return Error.NotFound(nameof(AppResource.NotFound), string.Format(AppResource.NotFound, request.Url));
 
-        return new SubscriberConfigDto(subscriber.Id, subscriber.Token);
+        return new SubscriberConfigDto(subscriber.Id.Value, subscriber.Token);
     }
 }

@@ -21,6 +21,6 @@ public class AddDeviceCommandHandler(IUnitOfWork uow, ISubscriberRepository subs
         if (dbResult.IsFailure)
             return dbResult.Error;
 
-        return device.Data.Id;
+        return device.Data.Id.Value;
     }
 }

@@ -29,7 +29,7 @@ public class AddDeviceCommandValidator : AbstractValidator<AddDeviceCommand>
 
 
     }
-    private async Task<bool> BeValidSubscriber(int id, CancellationToken cancellationToken = default) => await _subscriberRepository.ExistsAsync(id, cancellationToken);
+    private async Task<bool> BeValidSubscriber(SubscriberId id, CancellationToken cancellationToken = default) => await _subscriberRepository.ExistsAsync(id, cancellationToken);
 
 }
 

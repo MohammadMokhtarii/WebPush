@@ -23,7 +23,7 @@ public class SendNotificationCommandValidator : AbstractValidator<SendNotificati
 
 
     }
-    private async Task<bool> BeValidDevice(int deviceId, int subscriberId, CancellationToken cancellationToken = default) => await _subscriberRepository.DeviceExistsAsync(deviceId, subscriberId, cancellationToken);
+    private async Task<bool> BeValidDevice(DeviceId deviceId, SubscriberId subscriberId, CancellationToken cancellationToken = default) => await _subscriberRepository.DeviceExistsAsync(deviceId, subscriberId, cancellationToken);
 
 }
 

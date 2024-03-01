@@ -18,8 +18,8 @@ public class DeActivateSubscriberCommandValidator : AbstractValidator<DeActivate
     }
 
 
-    private async Task<bool> BeValidSubscriber(int id, CancellationToken cancellationToken = default) => await _subscriberRepository.ExistsAsync(id, cancellationToken);
-    private async Task<bool> BeActiveSubscriber(int id, CancellationToken cancellationToken = default)
+    private async Task<bool> BeValidSubscriber(SubscriberId id, CancellationToken cancellationToken = default) => await _subscriberRepository.ExistsAsync(id, cancellationToken);
+    private async Task<bool> BeActiveSubscriber(SubscriberId id, CancellationToken cancellationToken = default)
     {
         var subscriber = await _subscriberRepository.FindAsync(id, cancellationToken);
         return subscriber is not null && !subscriber.InActive;

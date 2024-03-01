@@ -28,16 +28,16 @@ public class AddDeviceCommandHandlerTest
         string deviceName = "FakeName";
         PushManager devicePushManager = PushManager.Create("Endpoint", "P256", "Auth");
         ClientMetadata deviceClientMetadata = ClientMetadata.Create("Android");
-        int subscriberId = 10;
+        SubscriberId subscriberId = new(10);
         AddDeviceCommand command = new(deviceName, devicePushManager, deviceClientMetadata, subscriberId);
 
-        _subscriberRepository.FindAsync(Arg.Any<int>()).ReturnsNull();
+        _subscriberRepository.FindAsync(subscriberId).ReturnsNull();
 
         //Act
         var result = await _addDeviceCommandHandler.Handle(command, default);
 
         //Assert
-        await _subscriberRepository.Received().FindAsync(Arg.Any<int>());
+        await _subscriberRepository.Received().FindAsync(subscriberId);
 
         result.IsFailure.Should().BeTrue();
         result.Error.Should().Be(SegmentApplicationErrors.Device.InvalidSubscriber);
@@ -54,17 +54,17 @@ public class AddDeviceCommandHandlerTest
         string deviceName = "FakeName";
         PushManager devicePushManager = PushManager.Create("Endpoint", "P256", "Auth");
         ClientMetadata deviceClientMetadata = ClientMetadata.Create("Android");
-        int subscriberId = subscriber.Data.Id;
+        SubscriberId subscriberId = subscriber.Data.Id;
 
         AddDeviceCommand command = new(deviceName, devicePushManager, deviceClientMetadata, subscriberId);
 
-        _subscriberRepository.FindAsync(Arg.Any<int>()).Returns(subscriber.Data);
+        _subscriberRepository.FindAsync(subscriberId).Returns(subscriber.Data);
 
         //Act
         var result = await _addDeviceCommandHandler.Handle(command, default);
 
         //Assert
-        await _subscriberRepository.Received().FindAsync(Arg.Any<int>());
+        await _subscriberRepository.Received().FindAsync(subscriberId);
         //subscriber.Data.Received().AddDevice(Arg.Any<string>(), Arg.Any<PushManager>(), Arg.Any<ClientMetadata>()); !!??
 
         result.IsFailure.Should().BeTrue();
@@ -80,18 +80,18 @@ public class AddDeviceCommandHandlerTest
         string deviceName = "FakeName";
         PushManager devicePushManager = PushManager.Create("Endpoint", "P256", "Auth");
         ClientMetadata deviceClientMetadata = ClientMetadata.Create("Android");
-        int subscriberId = subscriber.Data.Id;
+        SubscriberId subscriberId = subscriber.Data.Id;
 
         AddDeviceCommand command = new(deviceName, devicePushManager, deviceClientMetadata, subscriberId);
 
-        _subscriberRepository.FindAsync(Arg.Any<int>()).Returns(subscriber.Data);
+        _subscriberRepository.FindAsync(subscriberId).Returns(subscriber.Data);
         _uow.SaveChangesAsync(Arg.Any<CancellationToken>()).Returns(UnitOfWorkErrors.SaveChangesError);
 
         //Act
         var result = await _addDeviceCommandHandler.Handle(command, default);
 
         //Assert
-        await _subscriberRepository.Received().FindAsync(Arg.Any<int>());
+        await _subscriberRepository.Received().FindAsync(subscriberId);
         await _uow.Received().SaveChangesAsync(Arg.Any<CancellationToken>());
 
         result.IsFailure.Should().BeTrue();
@@ -107,22 +107,22 @@ public class AddDeviceCommandHandlerTest
         string deviceName = "FakeName";
         PushManager devicePushManager = PushManager.Create("Endpoint", "P256", "Auth");
         ClientMetadata deviceClientMetadata = ClientMetadata.Create("Android");
-        int subscriberId = subscriber.Data.Id;
+        SubscriberId subscriberId = subscriber.Data.Id;
 
         AddDeviceCommand command = new(deviceName, devicePushManager, deviceClientMetadata, subscriberId);
 
-        _subscriberRepository.FindAsync(Arg.Any<int>()).Returns(subscriber.Data);
+        _subscriberRepository.FindAsync(subscriberId).Returns(subscriber.Data);
         _uow.SaveChangesAsync(Arg.Any<CancellationToken>()).Returns(Result.Success());
 
         //Act
         var result = await _addDeviceCommandHandler.Handle(command, default);
 
         //Assert
-        await _subscriberRepository.Received().FindAsync(Arg.Any<int>());
+        await _subscriberRepository.Received().FindAsync(subscriberId);
         await _uow.Received().SaveChangesAsync(Arg.Any<CancellationToken>());
 
         result.IsSucess.Should().BeTrue();
         result.Error.Should().Be(Error.None);
-        subscriber.Data.Devices.Any(x => x.Id == result.Data).Should().BeTrue();
+        subscriber.Data.Devices.Any(x => x.Id.Value == result.Data).Should().BeTrue();
     }
 }

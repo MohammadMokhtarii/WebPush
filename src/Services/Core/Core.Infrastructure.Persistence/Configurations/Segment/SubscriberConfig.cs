@@ -13,6 +13,7 @@ internal sealed class SubscriberConfig : IEntityTypeConfiguration<Subscriber>
 
         builder.HasKey(x => x.Id).HasName($"PK_{DbConst.Segment}_{nameof(Subscriber)}");
         builder.Property(x => x.Id)
+               .HasConversion(valueType => valueType.Value, value => new(value))
                .ValueGeneratedOnAdd();
 
         builder.Property(x => x.Name)

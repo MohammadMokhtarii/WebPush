@@ -7,7 +7,7 @@ public class SubscriberRepository(ApplicationDbContext context) : BaseRepository
     public void Add(Subscriber model)
         => _context.Subscribers.Add(model);
 
-    public async Task<Subscriber?> FindAsync(int id, CancellationToken cancellationToken = default)
+    public async Task<Subscriber?> FindAsync(SubscriberId id, CancellationToken cancellationToken = default)
         => await _context.Subscribers.FindAsync([id], cancellationToken);
 
     public async Task<Subscriber?> FindAsync(WebsiteUrl url, CancellationToken cancellationToken = default)
@@ -16,9 +16,9 @@ public class SubscriberRepository(ApplicationDbContext context) : BaseRepository
     public async Task<bool> IsUniqueAsync(string name, CancellationToken cancellationToken = default)
         => !await _context.Subscribers.AnyAsync(x => x.Name == name && !x.InActive, cancellationToken);
 
-    public async Task<bool> ExistsAsync(int id, CancellationToken cancellationToken = default)
+    public async Task<bool> ExistsAsync(SubscriberId id, CancellationToken cancellationToken = default)
         => await _context.Subscribers.AnyAsync(x => x.Id == id, cancellationToken);
 
-    public async Task<bool> DeviceExistsAsync(int deviceId, int subscriberId, CancellationToken cancellationToken = default)
+    public async Task<bool> DeviceExistsAsync(DeviceId deviceId, SubscriberId subscriberId, CancellationToken cancellationToken = default)
         => await _context.Subscribers.AnyAsync(x => x.Id == subscriberId && x.Devices.Any(x => x.Id == deviceId), cancellationToken);
 }

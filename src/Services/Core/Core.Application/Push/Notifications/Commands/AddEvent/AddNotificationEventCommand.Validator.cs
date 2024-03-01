@@ -16,7 +16,7 @@ public class AddNotificationEventCommandValidator : AbstractValidator<AddNotific
                                                .IsInEnum().WithMessage((_, value) => string.Format(AppResource.NotFound, value)).WithErrorCode(nameof(AppResource.NotFound));
 
     }
-    private async Task<bool> BeValidDevice(int id, CancellationToken cancellationToken = default) => await _notificationRepository.ExistsAsync(id, cancellationToken);
+    private async Task<bool> BeValidDevice(NotificationId id, CancellationToken cancellationToken = default) => await _notificationRepository.ExistsAsync(id, cancellationToken);
 
 }
 
