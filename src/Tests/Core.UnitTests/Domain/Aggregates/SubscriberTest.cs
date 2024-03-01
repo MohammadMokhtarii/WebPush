@@ -117,7 +117,7 @@ public class SubscriberTest
         //Assert
         result.IsSucess.Should().BeTrue();
         result.Error.Should().Be(Error.None);
-        subscriber.Data.Devices.Any(x => x.Id == result.Data).Should().BeTrue();
+        subscriber.Data.Devices.Any(x => x.Id == result.Data.Id).Should().BeTrue();
 
     }
 }
