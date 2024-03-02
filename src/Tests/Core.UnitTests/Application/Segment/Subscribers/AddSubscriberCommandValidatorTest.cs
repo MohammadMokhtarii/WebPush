@@ -2,7 +2,6 @@
 using Core.Application.Segment;
 using Core.Domain.Segment;
 using FluentAssertions;
-using FluentValidation;
 using NSubstitute;
 
 namespace Core.UnitTests.Application.Segment.Subscribers;

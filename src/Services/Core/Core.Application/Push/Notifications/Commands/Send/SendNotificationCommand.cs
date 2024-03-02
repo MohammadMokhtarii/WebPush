@@ -1,5 +1,4 @@
-﻿using Core.Domain.Push;
-using Core.Domain.Segment;
+﻿using Core.Domain.Segment;
 using static Core.Application.Push.SendNotificationCommand;
 
 namespace Core.Application.Push;

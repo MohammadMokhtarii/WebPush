@@ -1,6 +1,4 @@
-﻿using Services.Common;
-
-namespace Core.Domain.Segment;
+﻿namespace Core.Domain.Segment;
 
 public readonly record struct PushManager
 {

@@ -1,5 +1,4 @@
-﻿using Core.Domain.Segment;
-using static Core.Application.Segment.GetSubscriberConfigQuery;
+﻿using static Core.Application.Segment.GetSubscriberConfigQuery;
 
 namespace Core.Application.Segment;
 

@@ -1,5 +1,4 @@
 ﻿using Core.Application.Common;
-using Core.Application.Common.Resources;
 using Core.Application.Segment;
 using Core.Domain.Segment;
 using FluentAssertions;

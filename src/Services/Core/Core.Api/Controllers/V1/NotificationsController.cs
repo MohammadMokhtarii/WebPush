@@ -1,6 +1,5 @@
 ﻿using Core.Application.Push;
 using Core.Domain.Push;
-using Core.Domain.Segment;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,7 +12,7 @@ public class NotificationsController(ISender sender) : BaseController
 
     [HttpPost]
     public async Task<IActionResult> SendAsync(SendNotificationCommand.SendNotificationDto item, CancellationToken cancellationToken)
-        => Ok(await _sender.Send(new SendNotificationCommand(new(item.DeviceId),new(item.SubscriberId),item.Payload), cancellationToken));
+        => Ok(await _sender.Send(new SendNotificationCommand(new(item.DeviceId), new(item.SubscriberId), item.Payload), cancellationToken));
 
 
     [HttpPost("{id}/event/{eventType}")]

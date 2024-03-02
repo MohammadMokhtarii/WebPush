@@ -1,6 +1,5 @@
 ﻿using Core.Application.Common;
 using Core.Domain.Push;
-using Core.Domain.Segment;
 
 namespace Core.Application.Push;
 public class SendNotificationCommandHandler(IUnitOfWork uow, INotificationRepository notificationRepository, IPublisher publisher) : IRequestHandler<SendNotificationCommand, Result<int>>
@@ -13,7 +12,7 @@ public class SendNotificationCommandHandler(IUnitOfWork uow, INotificationReposi
         if (model.IsFailure)
             return model.Error;
 
-        _notificationRepository.AddAsync(model.Data);
+        await _notificationRepository.AddAsync(model.Data);
 
         var dbResult = await _uow.SaveChangesAsync(cancellationToken);
         if (dbResult.IsFailure)
