@@ -23,13 +23,19 @@ namespace Core.Infrastructure.Persistence.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.HasSequence("notificationseq", "Push")
+                .IncrementsBy(10);
+
+            modelBuilder.HasSequence("subscriberseq", "Segment")
+                .IncrementsBy(10);
+
             modelBuilder.Entity("Core.Domain.Push.Notification", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseHiLo(b.Property<int>("Id"), "notificationseq", "Push");
 
                     b.Property<DateTime>("CreatedOnUtc")
                         .HasColumnType("datetime2");
@@ -195,7 +201,7 @@ namespace Core.Infrastructure.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseHiLo(b.Property<int>("Id"), "subscriberseq", "Segment");
 
                     b.Property<bool>("InActive")
                         .HasColumnType("bit");

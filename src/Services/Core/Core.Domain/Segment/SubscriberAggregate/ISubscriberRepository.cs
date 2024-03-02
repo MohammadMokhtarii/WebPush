@@ -2,7 +2,7 @@
 
 public interface ISubscriberRepository : IRepository<Subscriber>
 {
-    void Add(Subscriber entity);
+    Task AddAsync(Subscriber entity);
 
     Task<Subscriber?> FindAsync(SubscriberId id, CancellationToken cancellationToken = default);
     Task<Subscriber?> FindAsync(WebsiteUrl url, CancellationToken cancellationToken = default);

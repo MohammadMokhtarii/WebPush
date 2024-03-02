@@ -14,7 +14,8 @@ internal sealed class SubscriberConfig : IEntityTypeConfiguration<Subscriber>
         builder.HasKey(x => x.Id).HasName($"PK_{DbConst.Segment}_{nameof(Subscriber)}");
         builder.Property(x => x.Id)
                .HasConversion(valueType => valueType.Value, value => new(value))
-               .ValueGeneratedOnAdd();
+               .UseHiLo("subscriberseq", DbConst.Segment);
+
 
         builder.Property(x => x.Name)
                .IsRequired()

@@ -13,7 +13,7 @@ public class SendNotificationCommandHandler(IUnitOfWork uow, INotificationReposi
         if (model.IsFailure)
             return model.Error;
 
-        _notificationRepository.Add(model.Data);
+        _notificationRepository.AddAsync(model.Data);
 
         var dbResult = await _uow.SaveChangesAsync(cancellationToken);
         if (dbResult.IsFailure)

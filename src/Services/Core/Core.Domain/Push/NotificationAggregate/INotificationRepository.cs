@@ -4,5 +4,5 @@ public interface INotificationRepository : IRepository<Notification>
 {
     Task<Notification?> FindAsync(NotificationId id, CancellationToken cancellationToken = default);
     Task<bool> ExistsAsync(NotificationId id, CancellationToken cancellationToken = default);
-    void Add(Notification entity);
+    Task AddAsync(Notification entity);
 }

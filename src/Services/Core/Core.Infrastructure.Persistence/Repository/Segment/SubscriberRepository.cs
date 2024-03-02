@@ -4,8 +4,8 @@ namespace Core.Infrastructure.Persistence.Repository;
 
 public class SubscriberRepository(ApplicationDbContext context) : BaseRepository(context), ISubscriberRepository
 {
-    public void Add(Subscriber model)
-        => _context.Subscribers.Add(model);
+    public async Task AddAsync(Subscriber model)
+        =>await _context.Subscribers.AddAsync(model);
 
     public async Task<Subscriber?> FindAsync(SubscriberId id, CancellationToken cancellationToken = default)
         => await _context.Subscribers.FindAsync([id], cancellationToken);

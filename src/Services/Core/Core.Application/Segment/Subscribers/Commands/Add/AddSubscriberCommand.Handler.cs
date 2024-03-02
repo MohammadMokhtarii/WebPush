@@ -13,7 +13,7 @@ public class AddSubscriberCommandHandler(IUnitOfWork uow, ISubscriberRepository 
         if (model.IsFailure)
             return model.Error;
 
-        _subscriberRepository.Add(model.Data);
+        await _subscriberRepository.AddAsync(model.Data);
         var dbResult = await _uow.SaveChangesAsync(cancellationToken);
         if (dbResult.IsFailure)
             return dbResult.Error;

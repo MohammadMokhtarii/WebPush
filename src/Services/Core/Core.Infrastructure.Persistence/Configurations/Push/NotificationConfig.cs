@@ -15,7 +15,10 @@ internal sealed class NotificationConfig : IEntityTypeConfiguration<Notification
         builder.HasKey(x => x.Id).HasName($"PK_{DbConst.Push}_{nameof(Notification)}");
         builder.Property(x => x.Id)
                .HasConversion(valueType => valueType.Value, value => new(value))
-               .ValueGeneratedOnAdd();
+               .UseHiLo("notificationseq", DbConst.Push);
+
+
+
 
         builder.Property(x => x.CreatedOnUtc)
                .IsRequired();

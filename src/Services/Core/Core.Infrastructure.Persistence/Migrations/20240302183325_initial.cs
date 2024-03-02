@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Core.Infrastructure.Persistence.Migrations
 {
     /// <inheritdoc />
-    public partial class intial : Migration
+    public partial class initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -19,6 +19,16 @@ namespace Core.Infrastructure.Persistence.Migrations
 
             migrationBuilder.EnsureSchema(
                 name: "Base");
+
+            migrationBuilder.CreateSequence(
+                name: "notificationseq",
+                schema: "Push",
+                incrementBy: 10);
+
+            migrationBuilder.CreateSequence(
+                name: "subscriberseq",
+                schema: "Segment",
+                incrementBy: 10);
 
             migrationBuilder.CreateTable(
                 name: "OutboxMessage",
@@ -43,8 +53,7 @@ namespace Core.Infrastructure.Persistence.Migrations
                 schema: "Segment",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<int>(type: "int", nullable: false),
                     Token = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     Url = table.Column<string>(type: "varchar(50)", unicode: false, maxLength: 50, nullable: false),
@@ -66,8 +75,10 @@ namespace Core.Infrastructure.Persistence.Migrations
                     Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     CreatedOnUtc = table.Column<DateTime>(type: "datetime2", nullable: false),
                     SubscriberId = table.Column<int>(type: "int", nullable: false),
-                    ClientMetadata = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    PushManager = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    ClientMetadata_OS = table.Column<string>(type: "varchar(50)", unicode: false, maxLength: 50, nullable: false),
+                    PushManager_Auth = table.Column<string>(type: "varchar(50)", unicode: false, maxLength: 50, nullable: false),
+                    PushManager_Endpoint = table.Column<string>(type: "varchar(50)", unicode: false, maxLength: 50, nullable: false),
+                    PushManager_P256DH = table.Column<string>(type: "varchar(50)", unicode: false, maxLength: 50, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -86,13 +97,12 @@ namespace Core.Infrastructure.Persistence.Migrations
                 schema: "Push",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<int>(type: "int", nullable: false),
                     DeviceId = table.Column<int>(type: "int", nullable: false),
-                    Body_Title = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false),
-                    Body_Message = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
                     NotificationStatusId = table.Column<byte>(type: "tinyint", nullable: false),
-                    CreatedOnUtc = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    CreatedOnUtc = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Body_Message = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
+                    Body_Title = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -203,6 +213,14 @@ namespace Core.Infrastructure.Persistence.Migrations
 
             migrationBuilder.DropTable(
                 name: "Subscriber",
+                schema: "Segment");
+
+            migrationBuilder.DropSequence(
+                name: "notificationseq",
+                schema: "Push");
+
+            migrationBuilder.DropSequence(
+                name: "subscriberseq",
                 schema: "Segment");
         }
     }
