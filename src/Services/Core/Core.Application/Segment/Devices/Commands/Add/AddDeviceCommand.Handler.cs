@@ -11,7 +11,7 @@ public class AddDeviceCommandHandler(IUnitOfWork uow, ISubscriberRepository subs
     {
         var subscriber = await _subscriberRepository.FindAsync(request.SubscriberId, cancellationToken);
         if (subscriber is null)
-            return SegmentApplicationErrors.Device.InvalidSubscriber;
+            return SegmentApplicationErrors.InvalidSubscriber;
 
         var device = subscriber.AddDevice(request.Name, request.PushManager, request.ClientMetadata);
         if (device.IsFailure)

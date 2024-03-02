@@ -40,7 +40,7 @@ public class AddDeviceCommandHandlerTest
         await _subscriberRepository.Received().FindAsync(subscriberId);
 
         result.IsFailure.Should().BeTrue();
-        result.Error.Should().Be(SegmentApplicationErrors.Device.InvalidSubscriber);
+        result.Error.Should().Be(SegmentApplicationErrors.InvalidSubscriber);
     }
 
 

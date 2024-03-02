@@ -1,9 +1,6 @@
 ﻿using Core.Domain.Segment;
 using FluentAssertions;
-using Microsoft.VisualStudio.TestPlatform.CommunicationUtilities;
-using NSubstitute;
 using Services.Common;
-using static Core.Application.Segment.SegmentApplicationErrors;
 
 namespace Core.UnitTests.Domain.Aggregates;
 

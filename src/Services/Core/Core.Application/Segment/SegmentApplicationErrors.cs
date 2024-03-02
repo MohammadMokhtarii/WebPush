@@ -2,8 +2,13 @@
 
 internal static class SegmentApplicationErrors
 {
+    public readonly static Error InvalidSubscriber = Error.Validation("dsa", "ds");
+
     internal static class Device
     {
-        public readonly static Error InvalidSubscriber = Error.Validation("dsa", "ds");
+    }
+
+    internal static class Subscriber
+    {
     }
 }

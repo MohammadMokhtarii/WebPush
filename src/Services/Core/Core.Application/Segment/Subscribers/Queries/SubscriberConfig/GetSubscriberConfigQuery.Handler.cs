@@ -14,7 +14,7 @@ public sealed class GetSubscriberConfigQueryHandler(ISubscriberRepository subscr
 
         var subscriber = await _subscriberRepository.FindAsync(url.Data, cancellationToken);
         if (subscriber is null || subscriber.InActive)
-            return Error.NotFound(nameof(AppResource.NotFound), string.Format(AppResource.NotFound, request.Url));
+            return SegmentApplicationErrors.InvalidSubscriber;
 
         return new SubscriberConfigDto(subscriber.Id.Value, subscriber.Token);
     }
