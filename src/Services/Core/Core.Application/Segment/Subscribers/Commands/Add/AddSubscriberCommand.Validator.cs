@@ -14,7 +14,8 @@ public class AddSubscriberCommandValidator : AbstractValidator<AddSubscriberComm
                             .MaximumLength(50).WithMessage(string.Format(AppResource.MaxLengthExceeded, 50)).WithErrorCode(nameof(AppResource.MaxLengthExceeded))
                             .MustAsync(BeUniqueName).WithMessage((_, value) => string.Format(AppResource.MustBeUnique, value)).WithErrorCode(nameof(AppResource.MustBeUnique));
 
-        RuleFor(x => x.WebsiteUrl).NotEmpty().WithMessage(AppResource.NotEmpty).WithErrorCode(nameof(AppResource.NotEmpty))
+        RuleFor(x => x.WebsiteUrl).Cascade(CascadeMode.Stop)
+                                  .NotEmpty().WithMessage(AppResource.NotEmpty).WithErrorCode(nameof(AppResource.NotEmpty))
                                   .MaximumLength(50).WithMessage(string.Format(AppResource.MaxLengthExceeded, 50)).WithErrorCode(nameof(AppResource.MaxLengthExceeded))
                                   .Must(BeValidUrl).When(x => !string.IsNullOrEmpty(x.WebsiteUrl)).WithMessage(AppResource.MustBeValid).WithErrorCode(nameof(AppResource.MustBeValid));
 

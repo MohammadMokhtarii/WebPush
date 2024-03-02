@@ -12,8 +12,8 @@ public class AddDeviceCommandValidator : AbstractValidator<AddDeviceCommand>
         RuleFor(x => x.Name).NotEmpty().WithMessage(AppResource.NotEmpty).WithErrorCode(nameof(AppResource.NotEmpty))
                             .MaximumLength(50).WithMessage(string.Format(AppResource.MaxLengthExceeded, 50)).WithErrorCode(nameof(AppResource.MaxLengthExceeded));
 
-        RuleFor(x => x.SubscriberId).NotEmpty().WithMessage(AppResource.NotEmpty).WithErrorCode(nameof(AppResource.NotEmpty))
-                                    .MustAsync(BeValidSubscriber).When(x => x.SubscriberId != default!).WithMessage((_, value) => string.Format(AppResource.NotFound, value)).WithErrorCode(nameof(AppResource.NotFound));
+        RuleFor(x => x.SubscriberId).Cascade(CascadeMode.Stop).NotEmpty().WithMessage(AppResource.NotEmpty).WithErrorCode(nameof(AppResource.NotEmpty))
+                                    .MustAsync(BeValidSubscriber).WithMessage((_, value) => string.Format(AppResource.NotFound, value)).WithErrorCode(nameof(AppResource.NotFound));
 
         RuleFor(x => x.PushManager).ChildRules(child =>
         {
