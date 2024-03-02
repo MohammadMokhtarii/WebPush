@@ -11,7 +11,7 @@ public class DeActivateSubscriberCommandHandler(IUnitOfWork uow, ISubscriberRepo
     {
         var model = await _subscriberRepository.FindAsync(request.Id, cancellationToken);
         if (model is null)
-            return Error.NotFound(nameof(AppResource.NotFound), string.Format(AppResource.NotFound, request.Id));
+            return SegmentApplicationErrors.InvalidSubscriber;
 
         var result = model.DeActivate();
         if (result.IsFailure)
