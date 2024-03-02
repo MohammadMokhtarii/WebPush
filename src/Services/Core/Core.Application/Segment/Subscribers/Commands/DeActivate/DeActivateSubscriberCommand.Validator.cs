@@ -9,11 +9,10 @@ public class DeActivateSubscriberCommandValidator : AbstractValidator<DeActivate
     public DeActivateSubscriberCommandValidator(ISubscriberRepository subscriberRepository)
     {
         _subscriberRepository = subscriberRepository;
-        bool isValidSubscriber = false;
-        RuleFor(x => x.Id).NotEmpty().WithMessage(AppResource.NotEmpty).WithErrorCode(nameof(AppResource.NotEmpty))
-                          .MustAsync(async (id, CancellationToken) => isValidSubscriber = await BeValidSubscriber(id, CancellationToken))
-                          .When(x => x.Id != default!).WithMessage((_, value) => string.Format(AppResource.NotFound, value)).WithErrorCode(nameof(AppResource.NotFound))
-                          .MustAsync(BeActiveSubscriber).When(x => isValidSubscriber).WithMessage(AppResource.MustBeActive).WithErrorCode(nameof(AppResource.MustBeActive));
+        RuleFor(x => x.Id).Cascade(CascadeMode.Stop)
+                          .NotEmpty().WithMessage(AppResource.NotEmpty).WithErrorCode(nameof(AppResource.NotEmpty))
+                          .MustAsync(BeValidSubscriber).WithMessage((_, value) => string.Format(AppResource.NotFound, value)).WithErrorCode(nameof(AppResource.NotFound))
+                          .MustAsync(BeActiveSubscriber).WithMessage(AppResource.MustBeActive).WithErrorCode(nameof(AppResource.MustBeActive));
 
     }
 
