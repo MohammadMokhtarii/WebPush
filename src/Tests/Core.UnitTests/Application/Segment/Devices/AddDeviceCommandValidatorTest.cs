@@ -4,7 +4,7 @@ using Core.Domain.Segment;
 using FluentAssertions;
 using NSubstitute;
 
-namespace Core.UnitTests.Application.Segment;
+namespace Core.UnitTests.Application.Segment.Devices;
 
 public class AddDeviceCommandValidatorTest
 {
@@ -50,24 +50,24 @@ public class AddDeviceCommandValidatorTest
         result.IsValid.Should().BeFalse();
         result.Errors.Any(x => x.PropertyName == nameof(command.Name) && x.ErrorCode == nameof(AppResource.MaxLengthExceeded)).Should().BeTrue();
     }
-    //[Fact]
-    //public async Task Validate_Should_ReturnValidationError_When_SubscriberIdIsEmpty()
-    //{
-    //    //Arrange
-    //    string deviceName = "FakeName";
-    //    PushManager devicePushManager = PushManager.Create("Endpoint", "P256", "Auth");
-    //    ClientMetadata deviceClientMetadata = ClientMetadata.Create("Android");
-    //    SubscriberId subscriberId = new(0);
+    [Fact]
+    public async Task Validate_Should_ReturnValidationError_When_SubscriberIdIsEmpty()
+    {
+        //Arrange
+        string deviceName = "FakeName";
+        PushManager devicePushManager = PushManager.Create("Endpoint", "P256", "Auth");
+        ClientMetadata deviceClientMetadata = ClientMetadata.Create("Android");
+        SubscriberId subscriberId = new(0);
 
-    //    AddDeviceCommand command = new(deviceName, devicePushManager, deviceClientMetadata, subscriberId);
+        AddDeviceCommand command = new(deviceName, devicePushManager, deviceClientMetadata, subscriberId);
 
-    //    //Act
-    //    var result = await _validator.ValidateAsync(command, default);
+        //Act
+        var result = await _validator.ValidateAsync(command, default);
 
-    //    //Assert
-    //    result.IsValid.Should().BeFalse();
-    //    result.Errors.Any(x => x.PropertyName == nameof(command.SubscriberId) && x.ErrorCode == nameof(AppResource.NotEmpty)).Should().BeTrue();
-    //}
+        //Assert
+        result.IsValid.Should().BeFalse();
+        result.Errors.Any(x => x.PropertyName == nameof(command.SubscriberId) && x.ErrorCode == nameof(AppResource.NotEmpty)).Should().BeTrue();
+    }
 
     [Fact]
     public async Task Validate_Should_ReturnValidationError_When_SubscriberIdIsInvalid()

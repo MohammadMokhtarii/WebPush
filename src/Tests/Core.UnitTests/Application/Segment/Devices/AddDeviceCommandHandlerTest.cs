@@ -6,7 +6,7 @@ using NSubstitute;
 using NSubstitute.ReturnsExtensions;
 using Services.Common;
 
-namespace Core.UnitTests.Application.Segment;
+namespace Core.UnitTests.Application.Segment.Devices;
 
 public class AddDeviceCommandHandlerTest
 {
