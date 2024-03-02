@@ -1,5 +1,4 @@
 ﻿using Core.Domain.Segment;
-using FluentAssertions;
 using Services.Common;
 
 namespace Core.UnitTests.Domain.ValueObjects;

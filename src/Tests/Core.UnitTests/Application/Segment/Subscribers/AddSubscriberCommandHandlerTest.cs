@@ -1,8 +1,6 @@
 ﻿using Core.Application.Common;
 using Core.Application.Segment;
 using Core.Domain.Segment;
-using FluentAssertions;
-using NSubstitute;
 using Services.Common;
 
 namespace Core.UnitTests.Application.Segment.Subscribers;
