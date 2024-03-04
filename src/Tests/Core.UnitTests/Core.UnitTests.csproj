@@ -11,13 +11,10 @@
 
 	<ItemGroup>
 	  <Compile Remove="Application\Common\**" />
-	  <Compile Remove="Application\Push\**" />
 	  <Compile Remove="Application\Segment\Queries\**" />
 	  <EmbeddedResource Remove="Application\Common\**" />
-	  <EmbeddedResource Remove="Application\Push\**" />
 	  <EmbeddedResource Remove="Application\Segment\Queries\**" />
 	  <None Remove="Application\Common\**" />
-	  <None Remove="Application\Push\**" />
 	  <None Remove="Application\Segment\Queries\**" />
 	</ItemGroup>
 

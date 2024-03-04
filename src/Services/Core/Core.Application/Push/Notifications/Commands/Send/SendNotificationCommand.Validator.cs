@@ -9,15 +9,18 @@ public class SendNotificationCommandValidator : AbstractValidator<SendNotificati
     {
         _subscriberRepository = deviceRepository;
 
-        RuleFor(x => x.DeviceId).NotEmpty().WithMessage(AppResource.NotEmpty).WithErrorCode(nameof(AppResource.NotEmpty))
+        RuleFor(x => x.DeviceId).Cascade(CascadeMode.Stop)
+                                .NotEmpty().WithMessage(AppResource.NotEmpty).WithErrorCode(nameof(AppResource.NotEmpty))
                                 .MustAsync(async (command, deviceId, cancellationToken) => await BeValidDevice(deviceId, command.SubscriberId, cancellationToken)).WithMessage((_, value) => string.Format(AppResource.NotFound, value)).WithErrorCode(nameof(AppResource.NotFound));
 
         RuleFor(x => x.Payload).ChildRules(child =>
         {
-            child.RuleFor(x => x.Title).NotEmpty().WithMessage(AppResource.NotEmpty).WithErrorCode(nameof(AppResource.NotEmpty))
+            child.RuleFor(x => x.Title).Cascade(CascadeMode.Stop)
+                                       .NotEmpty().WithMessage(AppResource.NotEmpty).WithErrorCode(nameof(AppResource.NotEmpty))
                                        .MaximumLength(150).WithMessage(string.Format(AppResource.MaxLengthExceeded, 150)).WithErrorCode(nameof(AppResource.MaxLengthExceeded));
 
-            child.RuleFor(x => x.Message).NotEmpty().WithMessage(AppResource.NotEmpty).WithErrorCode(nameof(AppResource.NotEmpty))
+            child.RuleFor(x => x.Message).Cascade(CascadeMode.Stop)
+                                         .NotEmpty().WithMessage(AppResource.NotEmpty).WithErrorCode(nameof(AppResource.NotEmpty))
                                          .MaximumLength(500).WithMessage(string.Format(AppResource.MaxLengthExceeded, 500)).WithErrorCode(nameof(AppResource.MaxLengthExceeded));
         });
 

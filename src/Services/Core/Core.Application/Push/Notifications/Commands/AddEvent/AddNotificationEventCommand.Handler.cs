@@ -1,4 +1,5 @@
 ﻿using Core.Application.Common;
+using Core.Application.Segment;
 using Core.Domain.Push;
 
 namespace Core.Application.Push;
@@ -10,7 +11,7 @@ public class AddNotificationEventCommandHandler(IUnitOfWork uow, INotificationRe
     {
         var notification = await _notificationRepository.FindAsync(request.NotificationId, cancellationToken);
         if (notification is null)
-            return Error.NotFound(nameof(AppResource.NotFound), string.Format(AppResource.NotFound, request.NotificationId));
+            return PushApplicationErrors.InvalidNotification;
 
         notification.AddEvent(request.NotificationEventTypeId);
 

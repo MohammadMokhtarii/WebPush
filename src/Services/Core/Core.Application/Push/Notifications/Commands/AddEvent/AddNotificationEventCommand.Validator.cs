@@ -9,14 +9,16 @@ public class AddNotificationEventCommandValidator : AbstractValidator<AddNotific
     {
         _notificationRepository = notificationRepository;
 
-        RuleFor(x => x.NotificationId).NotEmpty().WithMessage(AppResource.NotEmpty).WithErrorCode(nameof(AppResource.NotEmpty))
-                                      .MustAsync(BeValidDevice).WithMessage((_, value) => string.Format(AppResource.NotFound, value)).WithErrorCode(nameof(AppResource.NotFound));
+        RuleFor(x => x.NotificationId).Cascade(CascadeMode.Stop)
+                                      .NotEmpty().WithMessage(AppResource.NotEmpty).WithErrorCode(nameof(AppResource.NotEmpty))
+                                      .MustAsync(BeValidNotification).WithMessage((_, value) => string.Format(AppResource.NotFound, value)).WithErrorCode(nameof(AppResource.NotFound));
 
-        RuleFor(x => x.NotificationEventTypeId).NotEmpty().WithMessage(AppResource.NotEmpty).WithErrorCode(nameof(AppResource.NotEmpty))
+        RuleFor(x => x.NotificationEventTypeId).Cascade(CascadeMode.Stop)
+                                               .NotEmpty().WithMessage(AppResource.NotEmpty).WithErrorCode(nameof(AppResource.NotEmpty))
                                                .IsInEnum().WithMessage((_, value) => string.Format(AppResource.NotFound, value)).WithErrorCode(nameof(AppResource.NotFound));
 
     }
-    private async Task<bool> BeValidDevice(NotificationId id, CancellationToken cancellationToken = default) => await _notificationRepository.ExistsAsync(id, cancellationToken);
+    private async Task<bool> BeValidNotification(NotificationId id, CancellationToken cancellationToken = default) => await _notificationRepository.ExistsAsync(id, cancellationToken);
 
 }
 
