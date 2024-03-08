@@ -18,13 +18,17 @@ public static class ConfigureServices
 
         services.AddSingleton<OutboxInterceptor>();
 
-        services.AddDbContext<ApplicationDbContext>((IServiceProvider serviceProvider, DbContextOptionsBuilder options) =>
+        services.AddDbContext<ApplicationDbContext>((IServiceProvider serviceProvider,
+                                                     DbContextOptionsBuilder options) =>
         {
-            options.UseSqlServer(serviceProvider.GetRequiredService<IConfiguration>().GetConnectionString("Application"), sqlOptions =>
+            options.UseSqlServer(serviceProvider.GetRequiredService<IConfiguration>()
+                                                .GetConnectionString("Application"), sqlOptions =>
             {
-                sqlOptions.EnableRetryOnFailure(maxRetryCount: 5, maxRetryDelay: TimeSpan.FromSeconds(30), errorNumbersToAdd: null);
-                sqlOptions.MigrationsHistoryTable("MigrationsHistory", "EF");
-            }).AddInterceptors(serviceProvider.GetRequiredService<OutboxInterceptor>());
+                sqlOptions.EnableRetryOnFailure(maxRetryCount: 5,
+                                                maxRetryDelay: TimeSpan.FromSeconds(30),
+                                                errorNumbersToAdd: null);
+
+            });
         });
 #if DEBUG
         services.AddHostedService<DBInitialzer>();

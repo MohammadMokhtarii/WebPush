@@ -16,8 +16,7 @@ namespace Services.Common.Presentation;
 
 public static class ApplicationExtentions
 {
-    private static readonly ushort MericPort = 49402;
-    private static readonly int HCPort = 49401;
+    private static readonly ushort MonintoringPort = 49402;
 
     public static WebApplicationBuilder AddServiceDefaults(this WebApplicationBuilder builder)
     {
@@ -32,7 +31,7 @@ public static class ApplicationExtentions
         builder.Services.Configure<GzipCompressionProviderOptions>(options => options.Level = CompressionLevel.Optimal);
         builder.Services.AddResponseCompression(options => options.Providers.Add<GzipCompressionProvider>());
 
-        builder.Services.AddMetricServer(options => options.Port = MericPort);
+        builder.Services.AddMetricServer(options => options.Port = MonintoringPort);
 
         return builder;
     }
@@ -69,12 +68,12 @@ public static class ApplicationExtentions
     }
     private static void MapDefaultHealthChecks(this WebApplication routes)
     {
-        routes.UseHealthChecks("/hc", HCPort, new HealthCheckOptions()
+        routes.UseHealthChecks("/hc", MonintoringPort, new HealthCheckOptions()
         {
             Predicate = _ => true,
             ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse,
         });
-        routes.UseHealthChecks("/liveness", HCPort, new HealthCheckOptions
+        routes.UseHealthChecks("/liveness", MonintoringPort, new HealthCheckOptions
         {
             Predicate = r => r.Name.Contains("self")
         });
