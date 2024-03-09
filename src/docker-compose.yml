@@ -1,8 +1,21 @@
-version: "3.4"
+version: '3.4'
 
 services:
+  core.api:
+    image: ${DOCKER_REGISTRY-}pushcoreapi
+    build:
+      context: .
+      dockerfile: Services/Core/Core.Api/Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:60731
+    ports:
+      - "60731:60731"
+    depends_on:
+      - rabbitmq
+
   db:
-    container_name: db
+    container_name: pushdb
     image: mcr.microsoft.com/mssql/server:2022-latest
     environment:
       SA_PASSWORD: 1qaz@WSX3edc
@@ -14,3 +27,10 @@ services:
       - "./App_Data/secrets/:/var/opt/mssql/secrets/"
     ports:
       - "60733:50433"
+
+  rabbitmq:
+    container_name: pushrabbit
+    image: rabbitmq:3-management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
