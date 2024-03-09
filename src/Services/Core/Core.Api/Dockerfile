@@ -1,10 +1,10 @@
 #See https://aka.ms/customizecontainer to learn how to customize your debug container and how Visual Studio uses this Dockerfile to build your images for faster debugging.
 
-FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
+FROM mcr.microsoft.com/dotnet/aspnet:8.0-alpine AS base
 USER app
 WORKDIR /app
 
-FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+FROM mcr.microsoft.com/dotnet/sdk:8.0-alpine AS build
 
 ARG BUILD_CONFIGURATION=Release
 
@@ -26,7 +26,18 @@ COPY . .
 WORKDIR "/src/Services/Core/Core.Api"
 RUN dotnet build "./Core.Api.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
+FROM build AS test
+
+WORKDIR /src/ArchitectureTests
+COPY ["Tests\Core.UnitTests\Core.UnitTests.csproj", "Core.UnitTests/"]
+RUN dotnet restore "Tests\Core.UnitTests\Core.UnitTests.csproj"
+COPY . .
+
+# Run the tests
+RUN dotnet test -c $BUILD_CONFIGURATION
+
 FROM build AS publish
+
 ARG BUILD_CONFIGURATION=Release
 RUN dotnet publish "./Core.Api.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 

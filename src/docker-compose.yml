@@ -8,11 +8,12 @@ services:
       dockerfile: Services/Core/Core.Api/Dockerfile
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_URLS=http://+:60731
+      - ASPNETCORE_URLS=http://+:49301
     ports:
-      - "60731:60731"
+      - "49301:49301"
     depends_on:
       - rabbitmq
+      - db
 
   db:
     container_name: pushdb
