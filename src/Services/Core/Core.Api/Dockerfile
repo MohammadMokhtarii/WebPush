@@ -10,6 +10,7 @@ ARG BUILD_CONFIGURATION=Release
 
 WORKDIR /src
 
+COPY ["WebPush.sln", "WebPush.sln"]
 COPY ["Directory.Packages.props", "."]
 COPY ["Directory.Build.props", "."]
 COPY ["Services/Core/Core.Api/Core.Api.csproj", "Services/Core/Core.Api/"]
@@ -20,27 +21,14 @@ COPY ["Services/Core/Core.Application/Core.Application.csproj", "Services/Core/C
 COPY ["Services/Core/Core.Domain/Core.Domain.csproj", "Services/Core/Core.Domain/"]
 COPY ["Services/Common/Services.Common/Services.Common.csproj", "Services/Common/Services.Common/"]
 
-RUN dotnet restore "./Services/Core/Core.Api/./Core.Api.csproj"
+RUN dotnet restore "WebPush.sln"
 COPY . .
 
 WORKDIR "/src/Services/Core/Core.Api"
 RUN dotnet build "./Core.Api.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
-FROM build AS test
-
-WORKDIR /src/Tests
-COPY ["Core.UnitTests\Core.UnitTests.csproj", "Core.UnitTests/"]
-RUN dotnet restore "Tests\Core.UnitTests\Core.UnitTests.csproj"
-COPY . .
-RUN dotnet test --logger "console;verbosity=detailed" -c $BUILD_CONFIGURATION
-
-COPY ["ArchitectureTests\ArchitectureTests.csproj", "ArchitectureTests/"]
-RUN dotnet restore "ArchitectureTests\ArchitectureTests.csproj"
-COPY . .
-RUN dotnet test --logger "console;verbosity=detailed" -c $BUILD_CONFIGURATION
 
 FROM build AS publish
-
 ARG BUILD_CONFIGURATION=Release
 RUN dotnet publish "./Core.Api.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
