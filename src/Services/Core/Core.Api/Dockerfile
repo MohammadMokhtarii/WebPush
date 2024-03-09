@@ -28,13 +28,16 @@ RUN dotnet build "./Core.Api.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 FROM build AS test
 
-WORKDIR /src/ArchitectureTests
-COPY ["Tests\Core.UnitTests\Core.UnitTests.csproj", "Core.UnitTests/"]
+WORKDIR /src/Tests
+COPY ["Core.UnitTests\Core.UnitTests.csproj", "Core.UnitTests/"]
 RUN dotnet restore "Tests\Core.UnitTests\Core.UnitTests.csproj"
 COPY . .
+RUN dotnet test --logger "console;verbosity=detailed" -c $BUILD_CONFIGURATION
 
-# Run the tests
-RUN dotnet test -c $BUILD_CONFIGURATION
+COPY ["ArchitectureTests\ArchitectureTests.csproj", "ArchitectureTests/"]
+RUN dotnet restore "ArchitectureTests\ArchitectureTests.csproj"
+COPY . .
+RUN dotnet test --logger "console;verbosity=detailed" -c $BUILD_CONFIGURATION
 
 FROM build AS publish
 
