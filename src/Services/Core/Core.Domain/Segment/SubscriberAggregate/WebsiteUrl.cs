@@ -5,11 +5,12 @@ namespace Core.Domain.Segment;
 
 public readonly record struct WebsiteUrl
 {
+    public WebsiteUrl() { }
     private WebsiteUrl(string url)
     {
         Value = url;
     }
-    public string Value { get; init; }
+    public string Value { get; init; } = default!;
 
 
     public static WebsiteUrl Create(string url)

@@ -7,13 +7,14 @@ public readonly record struct NotificationPayload
 {
     public const int Title_MaxLength = 150;
     public const int Message_MaxLength = 500;
+    public NotificationPayload() { }
     private NotificationPayload(string title, string message)
     {
         Title = title;
         Message = message;
     }
-    public string Title { get; init; }
-    public string Message { get; init; }
+    public string Title { get; init; } = default!;
+    public string Message { get; init; } = default!;
 
     public static NotificationPayload Create(string title, string message)
     {
