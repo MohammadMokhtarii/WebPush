@@ -16,7 +16,7 @@ public sealed class Subscriber : Entity, IAggregateRoot
     private Subscriber() { }
     public SubscriberId Id { get; private set; }
     public Guid Token { get; private set; }
-    public string Name { get; private set; }
+    public string Name { get; private set; } = default!;
     public WebsiteUrl Url { get; private set; }
     public bool InActive { get; private set; }
     public IReadOnlyCollection<Device> Devices => _devices;

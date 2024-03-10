@@ -2,7 +2,6 @@
 
 public readonly record struct ClientMetadata
 {
-    public ClientMetadata() { }
     private ClientMetadata(string os)
     {
         OS = os;
@@ -10,8 +9,5 @@ public readonly record struct ClientMetadata
     public string OS { get; init; }
 
 
-    public static ClientMetadata Create(string os)
-    {
-        return new ClientMetadata(os);
-    }
+    public static ClientMetadata Create(string os) => new(os);
 }

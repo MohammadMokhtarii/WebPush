@@ -13,7 +13,7 @@ public sealed class Device : Entity
     }
     private Device() { }
     public DeviceId Id { get; private set; }
-    public string Name { get; private set; }
+    public string Name { get; private set; } = default!;
     public PushManager PushManager { get; private set; }
     public ClientMetadata ClientMetadata { get; private set; }
     public DateTime CreatedOnUtc { get; private set; }
