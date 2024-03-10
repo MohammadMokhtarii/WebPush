@@ -1,5 +1,6 @@
 ﻿using Core.Application.Common;
 using Core.Application.Segment;
+using Core.Domain.Exceptions;
 using Core.Domain.Segment;
 
 using Services.Common;
@@ -47,26 +48,25 @@ public class AddDeviceCommandHandlerTest
     {
         //Arrange
         var subscriber = Subscriber.Create("Subscriber Name", "https://subscriber-url.com");
-        subscriber.Data.DeActivate();
+        subscriber.DeActivate();
 
         string deviceName = "FakeName";
         PushManager devicePushManager = PushManager.Create("Endpoint", "P256", "Auth");
         ClientMetadata deviceClientMetadata = ClientMetadata.Create("Android");
-        SubscriberId subscriberId = subscriber.Data.Id;
+        SubscriberId subscriberId = subscriber.Id;
 
         AddDeviceCommand command = new(deviceName, devicePushManager, deviceClientMetadata, subscriberId);
 
-        _subscriberRepository.FindAsync(subscriberId).Returns(subscriber.Data);
+        _subscriberRepository.FindAsync(subscriberId).Returns(subscriber);
 
         //Act
-        var result = await _addDeviceCommandHandler.Handle(command, default);
+        var result = async () => await _addDeviceCommandHandler.Handle(command, default);
 
-        //Assert
+        //Assert        
+        await result.Should().ThrowAsync<SubscriberIsInActiveDomainException>();
         await _subscriberRepository.Received().FindAsync(subscriberId);
         //subscriber.Data.Received().AddDevice(Arg.Any<string>(), Arg.Any<PushManager>(), Arg.Any<ClientMetadata>()); !!??
 
-        result.IsFailure.Should().BeTrue();
-        result.Error.Should().Be(SegmentDomainErrors.Subscriber.SubscriberIsInActive);
     }
 
     [Fact]
@@ -78,11 +78,11 @@ public class AddDeviceCommandHandlerTest
         string deviceName = "FakeName";
         PushManager devicePushManager = PushManager.Create("Endpoint", "P256", "Auth");
         ClientMetadata deviceClientMetadata = ClientMetadata.Create("Android");
-        SubscriberId subscriberId = subscriber.Data.Id;
+        SubscriberId subscriberId = subscriber.Id;
 
         AddDeviceCommand command = new(deviceName, devicePushManager, deviceClientMetadata, subscriberId);
 
-        _subscriberRepository.FindAsync(subscriberId).Returns(subscriber.Data);
+        _subscriberRepository.FindAsync(subscriberId).Returns(subscriber);
         _uow.SaveChangesAsync(Arg.Any<CancellationToken>()).Returns(UnitOfWorkErrors.SaveChangesError);
 
         //Act
@@ -105,11 +105,11 @@ public class AddDeviceCommandHandlerTest
         string deviceName = "FakeName";
         PushManager devicePushManager = PushManager.Create("Endpoint", "P256", "Auth");
         ClientMetadata deviceClientMetadata = ClientMetadata.Create("Android");
-        SubscriberId subscriberId = subscriber.Data.Id;
+        SubscriberId subscriberId = subscriber.Id;
 
         AddDeviceCommand command = new(deviceName, devicePushManager, deviceClientMetadata, subscriberId);
 
-        _subscriberRepository.FindAsync(subscriberId).Returns(subscriber.Data);
+        _subscriberRepository.FindAsync(subscriberId).Returns(subscriber);
         _uow.SaveChangesAsync(Arg.Any<CancellationToken>()).Returns(Result.Success());
 
         //Act
@@ -121,6 +121,6 @@ public class AddDeviceCommandHandlerTest
 
         result.IsSucess.Should().BeTrue();
         result.Error.Should().Be(Error.None);
-        subscriber.Data.Devices.Any(x => x.Id.Value == result.Data).Should().BeTrue();
+        subscriber.Devices.Any(x => x.Id.Value == result.Data).Should().BeTrue();
     }
 }

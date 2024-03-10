@@ -1,4 +1,5 @@
-﻿using Services.Common;
+﻿using Core.Domain.Exceptions;
+using Services.Common;
 
 namespace Core.Domain.Segment;
 
@@ -6,15 +7,15 @@ public readonly record struct WebsiteUrl
 {
     private WebsiteUrl(string url)
     {
-        Url = url;
+        Value = url;
     }
-    public string Url { get; init; }
+    public string Value { get; init; }
 
 
-    public static Result<WebsiteUrl> Create(string url)
+    public static WebsiteUrl Create(string url)
     {
         if (!UrlFormatChecker.UrlRegex().IsMatch(url))
-            return SegmentDomainErrors.Subscriber.WebsiteUrl.InvalidUrl;
+            throw new SubscriberUrlIsInvalidDomainException($"{url} Is Invalid");
 
         return new WebsiteUrl(url);
     }

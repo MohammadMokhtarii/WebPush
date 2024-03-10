@@ -1,4 +1,6 @@
-﻿using Core.Domain.Segment;
+﻿using Core.Domain.Exceptions;
+using Core.Domain.Segment;
+using NSubstitute.ExceptionExtensions;
 using Services.Common;
 
 namespace Core.UnitTests.Domain.ValueObjects;
@@ -14,11 +16,10 @@ public class WebsiteUrlTest
         string url = "example.com";
 
         //Act
-        var result = WebsiteUrl.Create(url);
+        var result = () => WebsiteUrl.Create(url);
 
         //Assert
-        result.IsFailure.Should().BeTrue();
-        result.Error.Should().Be(SegmentDomainErrors.Subscriber.WebsiteUrl.InvalidUrl);
+        result.Should().Throw<SubscriberUrlIsInvalidDomainException>();
     }
 
     [Fact]
@@ -28,12 +29,12 @@ public class WebsiteUrlTest
         string url = "https://example.com";
 
         //Act
-        var result = WebsiteUrl.Create(url);
+        var result = () => WebsiteUrl.Create(url);
 
         //Assert
-        result.IsSucess.Should().BeTrue();
-        result.Error.Should().Be(Error.None);
-        result.Data.Url.Should().Be(url);
+        result.Should().NotThrow<SubscriberUrlIsInvalidDomainException>();
+        result().Value.Should().Be(url);
+
     }
 }
 

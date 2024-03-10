@@ -29,14 +29,7 @@ public sealed class Notification : Entity, IAggregateRoot
     public IReadOnlyCollection<NotificationActivity> NotificationActivities => _notificationActivities;
     public IReadOnlyCollection<NotificationEvent> NotificationEvents => _notificationEvents;
 
-    public static Result<Notification> Create(DeviceId deviceId, string title, string message)
-    {
-        var payload = NotificationPayload.Create(title, message);
-        if (payload.IsFailure)
-            return payload.Error;
-
-        return new Notification(deviceId, payload.Data);
-    }
+    public static Notification Create(DeviceId deviceId, string title, string message)=> new Notification(deviceId, NotificationPayload.Create(title, message));
 
     public void ChangeStatus(NotificationStatus notificationStatusId, string description)
     {

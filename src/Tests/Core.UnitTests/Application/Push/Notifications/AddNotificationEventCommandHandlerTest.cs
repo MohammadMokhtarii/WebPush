@@ -51,7 +51,7 @@ public class AddNotificationEventCommandHandlerTest
         string title = "FakeTitle";
         string message = "FakeBody";
         AddNotificationEventCommand command = new(notificationId, notificationEventTypeId);
-        Core.Domain.Push.Notification notification = Core.Domain.Push.Notification.Create(deviceId, title, message).Data;
+        Core.Domain.Push.Notification notification = Core.Domain.Push.Notification.Create(deviceId, title, message);
 
         _notificationRepository.FindAsync(notificationId).Returns(notification);
         _uow.SaveChangesAsync(Arg.Any<CancellationToken>()).Returns(UnitOfWorkErrors.SaveChangesError);
@@ -77,7 +77,7 @@ public class AddNotificationEventCommandHandlerTest
         string title = "FakeTitle";
         string message = "FakeBody";
         AddNotificationEventCommand command = new(notificationId, notificationEventTypeId);
-        Core.Domain.Push.Notification notification = Core.Domain.Push.Notification.Create(deviceId, title, message).Data;
+        Core.Domain.Push.Notification notification = Core.Domain.Push.Notification.Create(deviceId, title, message);
         notification.ChangeStatus(NotificationStatus.Successful, "Fake Description");
         _notificationRepository.FindAsync(notificationId).Returns(notification);
         _uow.SaveChangesAsync(Arg.Any<CancellationToken>()).Returns(Result.Success());
@@ -105,7 +105,7 @@ public class AddNotificationEventCommandHandlerTest
         string title = "FakeTitle";
         string message = "FakeBody";
         AddNotificationEventCommand command = new(notificationId, notificationEventTypeId);
-        Core.Domain.Push.Notification notification = Core.Domain.Push.Notification.Create(deviceId, title, message).Data;
+        Core.Domain.Push.Notification notification = Core.Domain.Push.Notification.Create(deviceId, title, message);
         notification.ChangeStatus(NotificationStatus.Failed, "FakeDescription");
 
         _notificationRepository.FindAsync(notificationId).Returns(notification);

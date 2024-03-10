@@ -1,5 +1,7 @@
-﻿using Core.Domain.Push;
+﻿using Core.Domain.Exceptions;
+using Core.Domain.Push;
 using Core.Domain.Segment;
+using NSubstitute.ExceptionExtensions;
 using Services.Common;
 
 namespace Core.UnitTests.Domain.Aggregates;
@@ -16,11 +18,10 @@ public class NotificationTest
         string message = RandomStringGenerator.Generate(100);
 
         //Act
-        var result = Notification.Create(deviceId, title, message);
+        var result = () => Notification.Create(deviceId, title, message);
 
         //Assert
-        result.IsFailure.Should().BeTrue();
-        result.Error.Should().NotBe(Error.None);
+        result.Should().Throw<NotificationPayloadIsInvalidDomainException>();
 
     }
 
@@ -33,14 +34,13 @@ public class NotificationTest
         string message = "test notification message";
 
         //Act
-        var result = Notification.Create(deviceId, title, message);
+        var result = () => Notification.Create(deviceId, title, message);
 
         //Assert
-        result.IsSucess.Should().BeTrue();
-        result.Error.Should().Be(Error.None);
-        result.Data.DeviceId.Should().Be(deviceId);
-        result.Data.Body.Title.Should().Be(title);
-        result.Data.Body.Message.Should().Be(message);
+        result.Should().NotThrow<NotificationPayloadIsInvalidDomainException>();
+        result().DeviceId.Should().Be(deviceId);
+        result().Body.Title.Should().Be(title);
+        result().Body.Message.Should().Be(message);
     }
 
 
@@ -52,15 +52,15 @@ public class NotificationTest
         string title = "test notification";
         string message = "test notification message";
         var notification = Notification.Create(deviceId, title, message);
-        notification.Data.ChangeStatus(NotificationStatus.Successful, "Description");
+        notification.ChangeStatus(NotificationStatus.Successful, "Description");
 
         //Act
-        notification.Data.ChangeStatus(NotificationStatus.Failed, "Description");
+        notification.ChangeStatus(NotificationStatus.Failed, "Description");
 
         //Assert
 
-        notification.Data.NotificationActivities.Should().HaveCount(1);
-        notification.Data.NotificationEvents.Should().HaveCount(1);
+        notification.NotificationActivities.Should().HaveCount(1);
+        notification.NotificationEvents.Should().HaveCount(1);
     }
 
 
@@ -74,12 +74,12 @@ public class NotificationTest
         var notification = Notification.Create(deviceId, title, message);
 
         //Act
-        notification.Data.ChangeStatus(NotificationStatus.Successful, "Description");
+        notification.ChangeStatus(NotificationStatus.Successful, "Description");
 
         //Assert
 
-        notification.Data.NotificationActivities.Should().HaveCount(1);
-        notification.Data.NotificationEvents.Should().HaveCount(1);
+        notification.NotificationActivities.Should().HaveCount(1);
+        notification.NotificationEvents.Should().HaveCount(1);
     }
 
     [Fact]
@@ -92,12 +92,12 @@ public class NotificationTest
         var notification = Notification.Create(deviceId, title, message);
 
         //Act
-        notification.Data.ChangeStatus(NotificationStatus.Failed, "Description");
+        notification.ChangeStatus(NotificationStatus.Failed, "Description");
 
         //Assert
 
-        notification.Data.NotificationActivities.Should().HaveCount(1);
-        notification.Data.NotificationEvents.Should().BeEmpty();
+        notification.NotificationActivities.Should().HaveCount(1);
+        notification.NotificationEvents.Should().BeEmpty();
     }
 
 
@@ -109,14 +109,14 @@ public class NotificationTest
         string title = "test notification";
         string message = "test notification message";
         var notification = Notification.Create(deviceId, title, message);
-        notification.Data.ChangeStatus(NotificationStatus.Successful, string.Empty);
+        notification.ChangeStatus(NotificationStatus.Successful, string.Empty);
 
         //Act
-        notification.Data.AddEvent(NotificationEventType.Sent);
+        notification.AddEvent(NotificationEventType.Sent);
 
         //Assert
 
-        notification.Data.NotificationEvents.Should().HaveCountGreaterThan(1);
+        notification.NotificationEvents.Should().HaveCountGreaterThan(1);
     }
 
     [Fact]
@@ -129,10 +129,10 @@ public class NotificationTest
         var notification = Notification.Create(deviceId, title, message);
 
         //Act
-        notification.Data.AddEvent(NotificationEventType.Sent);
+        notification.AddEvent(NotificationEventType.Sent);
 
         //Assert
 
-        notification.Data.NotificationEvents.Should().HaveCount(0);
+        notification.NotificationEvents.Should().HaveCount(0);
     }
 }

@@ -25,7 +25,7 @@ internal sealed class SubscriberConfig : IEntityTypeConfiguration<Subscriber>
                .IsRequired()
                .HasMaxLength(50)
                .IsUnicode(false)
-               .HasConversion(x => x.Url, y => WebsiteUrl.Create(y).Data);
+               .HasConversion(x => x.Value, y => WebsiteUrl.Create(y));
 
 
         builder.HasMany(x => x.Devices)
