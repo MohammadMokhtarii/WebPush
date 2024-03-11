@@ -26,7 +26,7 @@ public class AddSubscriberCommandHandlerTest
     {
         //Arrange   
         string subscriberName = "";
-        string url = "http://example.com";
+        string url = "http://example@com";
         AddSubscriberCommand command = new(subscriberName, url);
 
         //Act
