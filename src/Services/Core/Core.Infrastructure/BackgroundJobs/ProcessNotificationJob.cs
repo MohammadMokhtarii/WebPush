@@ -30,7 +30,6 @@ public class ProcessNotificationJob : IJob
     {
         _logger.LogInformation("Executing Notifications Job Started");
 
-
         Stopwatch timer = new();
         timer.Start();
 
@@ -52,28 +51,24 @@ public class ProcessNotificationJob : IJob
                                        .Take(pageSize)
                                        .ToListAsync(context.CancellationToken);
 
-
             foreach (var message in messages)
             {
                 try
                 {
-                    _logger.LogInformation(message: "Publishing 1 Messages To RabbitMq Started");
-
-                    var json = JsonConvert.SerializeObject(new
+                    var messageBody = new
                     {
                         Id = message.Id.Value,
                         Device = message.Device.PushManager,
                         Body = message.Body,
-                    });
+                    };
+                    _logger.LogInformation(message: "Publishing Message {@messageBody} To RabbitMq Started", messageBody);
+
+                    var json = JsonConvert.SerializeObject(messageBody);
                     var body = Encoding.UTF8.GetBytes(json);
 
                     channel.BasicPublish("", "Push", body: body);
-
-                    _logger.LogInformation(message: "Publishing 1 Messages To RabbitMq Ended");
-
-
+                    _logger.LogInformation(message: "Publishing Message {@messageBody} To RabbitMq Ended", messageBody);
                     message.ChangeStatus(NotificationStatus.Sent, "Change to Sent");
-
                 }
                 catch (Exception e)
                 {
@@ -81,13 +76,11 @@ public class ProcessNotificationJob : IJob
                 }
 
             }
-
             if (messages.Count != 0)
             {
                 await _dbContext.SaveChangesAsync(context.CancellationToken);
                 pageNumber++;
             }
-
 
         } while (messages.Count != 0);
 
