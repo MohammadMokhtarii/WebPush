@@ -22,7 +22,7 @@ public sealed class Notification : Entity, IAggregateRoot
     public DeviceId DeviceId { get; private set; }
     public Device Device { get; private set; } = default!;
     public NotificationPayload Body { get; private set; }
-    public NotificationStatus NotificationStatusId { get; set; }
+    public NotificationStatus NotificationStatusId { get; private set; }
     public DateTime CreatedOnUtc { get; private set; }
 
     public IReadOnlyCollection<NotificationActivity> NotificationActivities => _notificationActivities;
