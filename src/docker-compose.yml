@@ -17,6 +17,7 @@ services:
   db:
     container_name: pushdb
     image: mcr.microsoft.com/mssql/server:2022-latest
+    user: root
     environment:
       SA_PASSWORD: 1qaz@WSX3edc
       ACCEPT_EULA: Y

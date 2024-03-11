@@ -9,18 +9,16 @@ public class SendNotificationCommandHandler(IUnitOfWork uow, INotificationReposi
     public async Task<Result<int>> Handle(SendNotificationCommand request, CancellationToken cancellationToken)
     {
         var model = Notification.Create(request.DeviceId, request.Payload.Title, request.Payload.Message);
-        if (model.IsFailure)
-            return model.Error;
 
-        await _notificationRepository.AddAsync(model.Data);
+        await _notificationRepository.AddAsync(model);
 
         var dbResult = await _uow.SaveChangesAsync(cancellationToken);
         if (dbResult.IsFailure)
             return dbResult.Error;
 
         //TODO:Will Be Removed At Final Product
-        await publisher.Publish(new NotificationAddedDomainEvent(model.Data.Id), cancellationToken);
+        await publisher.Publish(new NotificationAddedDomainEvent(model.Id), cancellationToken);
 
-        return model.Data.Id.Value;
+        return model.Id.Value;
     }
 }

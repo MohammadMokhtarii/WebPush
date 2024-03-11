@@ -1,4 +1,6 @@
-﻿using Core.Domain.Segment;
+﻿using Core.Domain.Exceptions;
+using Core.Domain.Segment;
+using NSubstitute.ExceptionExtensions;
 using Services.Common;
 
 namespace Core.UnitTests.Domain.Aggregates;
@@ -14,11 +16,10 @@ public class SubscriberTest
         string url = "example.com";
 
         //Act
-        var result = Subscriber.Create(name, url);
+        var result = () => Subscriber.Create(name, url);
 
         //Assert
-        result.IsFailure.Should().BeTrue();
-        result.Error.Should().Be(SegmentDomainErrors.Subscriber.WebsiteUrl.InvalidUrl);
+        result.Should().Throw<SubscriberUrlIsInvalidDomainException>();
     }
     [Fact]
     public void Create_Should_ReturnSubscriber_When_UrlIsValid()
@@ -28,31 +29,11 @@ public class SubscriberTest
         string url = "https://example.com";
 
         //Act
-        var result = Subscriber.Create(name, url);
+        var result = () => Subscriber.Create(name, url);
 
         //Assert
-        result.IsSucess.Should().BeTrue();
-        result.Error.Should().Be(Error.None);
-        result.Data.Name.Should().Be(name);
-        result.Data.Url.Url.Should().Be(url);
-    }
-
-
-    [Fact]
-    public void DeActivate_Should_ReturnSubscriberIsAlreadyInActive_When_SubscriberIsInActive()
-    {
-        //Arrange
-        string name = "Test";
-        string url = "https://example.com";
-        var subscriber = Subscriber.Create(name, url);
-        subscriber.Data.DeActivate();
-
-        //Act
-        var result = subscriber.Data.DeActivate();
-
-        //Assert
-        result.IsFailure.Should().BeTrue();
-        result.Error.Should().Be(SegmentDomainErrors.Subscriber.SubscriberIsAlreadyInActive);
+        result.Should().NotThrow<SubscriberUrlIsInvalidDomainException>();
+        result().Url.Value.Should().Be(url);
     }
 
     [Fact]
@@ -64,12 +45,10 @@ public class SubscriberTest
         var subscriber = Subscriber.Create(name, url);
 
         //Act
-        var result = subscriber.Data.DeActivate();
+        subscriber.DeActivate();
 
         //Assert
-        result.IsSucess.Should().BeTrue();
-        result.Error.Should().Be(Error.None);
-        subscriber.Data.InActive.Should().BeTrue();
+        subscriber.InActive.Should().BeTrue();
     }
 
     [Fact]
@@ -79,20 +58,18 @@ public class SubscriberTest
         string subscriberName = "FakeName";
         string subscriberUrl = "https://example.com";
         var subscriber = Subscriber.Create(subscriberName, subscriberUrl);
-        subscriber.Data.DeActivate();
+        subscriber.DeActivate();
 
         string deviceName = "FakeName";
         PushManager devicePushManager = PushManager.Create("Endpoint", "P256", "Auth");
         ClientMetadata deviceClientMetadata = ClientMetadata.Create("Android");
 
         //Act
-        var result = subscriber.Data.AddDevice(deviceName, devicePushManager, deviceClientMetadata);
+        var result = () => subscriber.AddDevice(deviceName, devicePushManager, deviceClientMetadata);
 
         //Assert
-        result.IsFailure.Should().BeTrue();
-
-        subscriber.Data.Devices.Should().BeEmpty();
-        result.Error.Should().Be(SegmentDomainErrors.Subscriber.SubscriberIsInActive);
+        result.Should().Throw<SubscriberIsInActiveDomainException>();
+        subscriber.Devices.Should().BeEmpty();
     }
 
     [Fact]
@@ -108,12 +85,11 @@ public class SubscriberTest
         ClientMetadata deviceClientMetadata = ClientMetadata.Create("Android");
 
         //Act
-        var result = subscriber.Data.AddDevice(deviceName, devicePushManager, deviceClientMetadata);
+        var result = () => subscriber.AddDevice(deviceName, devicePushManager, deviceClientMetadata);
 
         //Assert
-        result.IsSucess.Should().BeTrue();
-        result.Error.Should().Be(Error.None);
-        subscriber.Data.Devices.Any(x => x.Id == result.Data.Id).Should().BeTrue();
+        result.Should().NotThrow<SubscriberIsInActiveDomainException>();
+        subscriber.Devices.Any(x => x.Id == result().Id).Should().BeTrue();
 
     }
 }

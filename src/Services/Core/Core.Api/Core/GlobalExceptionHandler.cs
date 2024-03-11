@@ -1,4 +1,5 @@
 ﻿using Core.Application.Common;
+using Core.Domain.Exceptions;
 using Google.Protobuf.WellKnownTypes;
 using Google.Rpc;
 using Grpc.Core;
@@ -17,7 +18,7 @@ public class GlobalExceptionHandler(ILogger<GlobalExceptionHandler> logger) : IE
             exception, "Exception occurred: {Message}", exception.Message);
 
         ProblemDetails problemDetails;
-        if (exception is BussinessValidtion bussinessValidtion)
+        if (exception is BussinessValidtionException bussinessValidtion)
         {
             problemDetails = new ProblemDetails
             {
@@ -29,6 +30,15 @@ public class GlobalExceptionHandler(ILogger<GlobalExceptionHandler> logger) : IE
             {
                 problemDetails.Extensions["errors"] = bussinessValidtion.Errors;
             }
+        }
+        else if (exception is DomainException domainException)
+        {
+            problemDetails = new ProblemDetails
+            {
+                Status = StatusCodes.Status400BadRequest,
+                Type = "ValidationFailure",
+                Detail = domainException.Message
+            };
         }
         else
         {
@@ -59,7 +69,7 @@ public class GrpcGlobalExceptionHandlerInterceptor(ILogger<GrpcGlobalExceptionHa
         {
             return await base.UnaryServerHandler(request, context, continuation);
         }
-        catch (BussinessValidtion bussinessValidtion)
+        catch (BussinessValidtionException bussinessValidtion)
         {
 
             _logger.LogError(bussinessValidtion, "Exception occurred: {Message}", bussinessValidtion.Message);

@@ -14,13 +14,11 @@ public class AddDeviceCommandHandler(IUnitOfWork uow, ISubscriberRepository subs
             return SegmentApplicationErrors.InvalidSubscriber;
 
         var device = subscriber.AddDevice(request.Name, request.PushManager, request.ClientMetadata);
-        if (device.IsFailure)
-            return device.Error;
 
         var dbResult = await _uow.SaveChangesAsync(cancellationToken);
         if (dbResult.IsFailure)
             return dbResult.Error;
 
-        return device.Data.Id.Value;
+        return device.Id.Value;
     }
 }

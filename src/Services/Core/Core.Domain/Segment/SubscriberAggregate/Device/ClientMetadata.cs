@@ -7,11 +7,8 @@ public readonly record struct ClientMetadata
     {
         OS = os;
     }
-    public string OS { get; init; }
+    public string OS { get; init; } = default!;
 
 
-    public static ClientMetadata Create(string os)
-    {
-        return new ClientMetadata(os);
-    }
+    public static ClientMetadata Create(string os) => new(os);
 }

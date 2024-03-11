@@ -9,12 +9,9 @@ public readonly record struct PushManager
         P256DH = p256DH;
         Auth = auth;
     }
-    public string Endpoint { get; init; }
-    public string P256DH { get; init; }
-    public string Auth { get; init; }
+    public string Endpoint { get; init; } = default!;
+    public string P256DH { get; init; } = default!;
+    public string Auth { get; init; } = default!;
 
-    public static PushManager Create(string endpoint, string p256DH, string auth)
-    {
-        return new PushManager(endpoint, p256DH, auth);
-    }
+    public static PushManager Create(string endpoint, string p256DH, string auth) => new(endpoint, p256DH, auth);
 }

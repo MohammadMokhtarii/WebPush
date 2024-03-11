@@ -1,5 +1,9 @@
-﻿using Core.Domain.Push;
+﻿using Core.Domain.Exceptions;
+using Core.Domain.Push;
+using Microsoft.VisualStudio.TestPlatform.CommunicationUtilities;
+using NSubstitute.ExceptionExtensions;
 using Services.Common;
+using System;
 
 namespace Core.UnitTests.Domain.ValueObjects;
 
@@ -13,13 +17,10 @@ public class NotificationPayloadTest
     {
 
         //Act
-        var result = NotificationPayload.Create(title, message);
+        var result = () => NotificationPayload.Create(title, message);
 
         //Assert
-
-        result.IsFailure.Should().BeTrue();
-        result.Error.Should().Be(PushDomainErrors.Notification.NotificationPayload.TitleCanNotBeEmpty);
-
+        result.Should().Throw<NotificationPayloadIsInvalidDomainException>();
     }
 
 
@@ -29,12 +30,11 @@ public class NotificationPayloadTest
     public void Create_Should_ReturnMessageCanNotBeEmpty_When_MessageIsEmpty(string title, string message)
     {
         //Act
-        var result = NotificationPayload.Create(title, message);
+        var result = () => NotificationPayload.Create(title, message);
 
         //Assert
 
-        result.IsFailure.Should().BeTrue();
-        result.Error.Should().Be(PushDomainErrors.Notification.NotificationPayload.MessageCanNotBeEmpty);
+        result.Should().Throw<NotificationPayloadIsInvalidDomainException>();
     }
 
     [Fact]
@@ -46,12 +46,11 @@ public class NotificationPayloadTest
 
 
         //Act
-        var result = NotificationPayload.Create(title, message);
+        var result = () => NotificationPayload.Create(title, message);
 
         //Assert
 
-        result.IsFailure.Should().BeTrue();
-        result.Error.Should().Be(PushDomainErrors.Notification.NotificationPayload.TitleMaxLengthExcced);
+        result.Should().Throw<NotificationPayloadIsInvalidDomainException>();
     }
 
     [Fact]
@@ -62,12 +61,11 @@ public class NotificationPayloadTest
         string message = RandomStringGenerator.Generate(550);
 
         //Act
-        var result = NotificationPayload.Create(title, message);
+        var result = () => NotificationPayload.Create(title, message);
 
         //Assert
 
-        result.IsFailure.Should().BeTrue();
-        result.Error.Should().Be(PushDomainErrors.Notification.NotificationPayload.MessageMaxLengthExcced);
+        result.Should().Throw<NotificationPayloadIsInvalidDomainException>();
     }
 
 
@@ -79,14 +77,13 @@ public class NotificationPayloadTest
         string message = RandomStringGenerator.Generate(500);
 
         //Act
-        var result = NotificationPayload.Create(title, message);
+        var result = () => NotificationPayload.Create(title, message);
 
         //Assert
 
-        result.IsSucess.Should().BeTrue();
-        result.Error.Should().Be(Error.None);
-        result.Data.Title.Should().Be(title);
-        result.Data.Message.Should().Be(message);
+        result.Should().NotThrow<NotificationPayloadIsInvalidDomainException>();
+        result().Title.Should().Be(title);
+        result().Message.Should().Be(message);
 
     }
 }

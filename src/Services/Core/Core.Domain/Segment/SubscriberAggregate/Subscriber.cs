@@ -1,4 +1,5 @@
-﻿using Services.Common;
+﻿using Core.Domain.Exceptions;
+using Services.Common;
 
 namespace Core.Domain.Segment;
 
@@ -15,26 +16,17 @@ public sealed class Subscriber : Entity, IAggregateRoot
     private Subscriber() { }
     public SubscriberId Id { get; private set; }
     public Guid Token { get; private set; }
-    public string Name { get; private set; }
+    public string Name { get; private set; } = default!;
     public WebsiteUrl Url { get; private set; }
     public bool InActive { get; private set; }
     public IReadOnlyCollection<Device> Devices => _devices;
 
-    public static Result<Subscriber> Create(string name, string url)
-    {
-        var websiteUrlResult = WebsiteUrl.Create(url);
-        if (websiteUrlResult.IsFailure)
-            return websiteUrlResult.Error;
+    public static Subscriber Create(string name, string url) => new(Guid.NewGuid(), name, WebsiteUrl.Create(url));
 
-        Subscriber model = new(Guid.NewGuid(), name, websiteUrlResult.Data);
-
-        return model;
-    }
-
-    public Result<Device> AddDevice(string name, PushManager pushManager, ClientMetadata clientMetadata)
+    public Device AddDevice(string name, PushManager pushManager, ClientMetadata clientMetadata)
     {
         if (InActive)
-            return SegmentDomainErrors.Subscriber.SubscriberIsInActive;
+            throw new SubscriberIsInActiveDomainException("");
 
         Device device = Device.Create(name, pushManager, clientMetadata, Id);
 
@@ -42,13 +34,8 @@ public sealed class Subscriber : Entity, IAggregateRoot
 
         return device;
     }
-    public Result DeActivate()
+    public void DeActivate()
     {
-        if (InActive)
-            return SegmentDomainErrors.Subscriber.SubscriberIsAlreadyInActive;
-
         InActive = true;
-
-        return Result.Success();
     }
 }
