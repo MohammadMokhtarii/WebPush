@@ -7,7 +7,7 @@ var builder = Host.CreateApplicationBuilder(args);
 builder.Services.AddHostedService<Worker>();
 
 
-var factory = new ConnectionFactory { HostName = "localhost", Port = 15672, UserName = "guest", Password = "guest", };
+var factory = new ConnectionFactory { HostName = "rabbitmq", Port = 5672 };
 var connection = factory.CreateConnection();
 using var channel = connection.CreateModel();
 
