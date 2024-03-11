@@ -20,7 +20,7 @@ COPY ["Services/Core/Core.Application/Core.Application.csproj", "Services/Core/C
 COPY ["Services/Core/Core.Domain/Core.Domain.csproj", "Services/Core/Core.Domain/"]
 COPY ["Services/Common/Services.Common/Services.Common.csproj", "Services/Common/Services.Common/"]
 
-RUN dotnet restasdfasfasfore "./Services/Core/Core.Api/./Core.Api.csproj"
+RUN dotnet restore "./Services/Core/Core.Api/Core.Api.csproj"
 COPY . .
 
 WORKDIR "/src/Services/Core/Core.Api"
