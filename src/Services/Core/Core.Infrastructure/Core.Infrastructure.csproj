@@ -4,7 +4,8 @@
 	<ItemGroup>
 		<PackageReference Include="Quartz" />
 		<PackageReference Include="Quartz.Extensions.Hosting" />
-		<PackageReference Include="WebPush"  />
+		<PackageReference Include="RabbitMQ.Client" />
+		<PackageReference Include="WebPush" />
 
 	</ItemGroup>
 

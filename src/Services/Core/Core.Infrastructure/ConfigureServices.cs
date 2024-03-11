@@ -18,6 +18,11 @@ public static class ConfigureServices
                      .AddTrigger(trigger => trigger.ForJob(jobKey)
                                                    .WithSimpleSchedule(schedule => schedule.WithIntervalInSeconds(10)
                                                                                            .RepeatForever()));
+            var notificationJobKey = new JobKey(nameof(ProcessNotificationJob));
+            configure.AddJob<ProcessNotificationJob>(notificationJobKey)
+                     .AddTrigger(trigger => trigger.ForJob(notificationJobKey)
+                                                   .WithSimpleSchedule(schedule => schedule.WithIntervalInSeconds(60)
+                                                                                           .RepeatForever()));
         }).AddQuartzHostedService();
 
 
