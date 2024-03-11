@@ -15,12 +15,12 @@ public class ValidatorBehavior<TRequest, TResponse>(IEnumerable<IValidator<TRequ
         _logger.LogInformation("Validating command {CommandType}", typeName);
 
         var validations = await Task.WhenAll(_validators.Select(v => v.ValidateAsync(request)));
-        var errors = validations.Where(x => !x.IsValid).SelectMany(result => result.Errors).Select(x => new BussinessValidtion.ValidationError(x.ErrorCode, x.PropertyName, x.ErrorMessage)).ToList();
+        var errors = validations.Where(x => !x.IsValid).SelectMany(result => result.Errors).Select(x => new BussinessValidtionException.ValidationError(x.ErrorCode, x.PropertyName, x.ErrorMessage)).ToList();
 
         if (errors.Count != 0)
         {
             _logger.LogWarning("Validation errors - {CommandType} - Command: {@Command} - Errors: {@ValidationErrors}", typeName, request, errors);
-            throw new BussinessValidtion(
+            throw new BussinessValidtionException(
                 $"Command Validation Errors for type {typeof(TRequest).Name}", errors);
         }
 
