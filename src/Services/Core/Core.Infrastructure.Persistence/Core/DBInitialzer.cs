@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Core.Domain.Segment;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
@@ -30,13 +31,20 @@ public class DBInitialzer : BackgroundService
     }
 
 
-    public Task TrySeedAsync(CancellationToken cancellationToken = default)
+    public async Task TrySeedAsync(CancellationToken cancellationToken = default)
     {
         _logger.LogInformation("Seed Database Started");
 
+        await SeedSubscriberAsync(cancellationToken);
 
         _logger.LogInformation("Seed Database Finished");
+        await _dbContext.SaveChangesAsync(cancellationToken);
+    }
 
-        return Task.CompletedTask;
+    private async Task SeedSubscriberAsync(CancellationToken cancellationToken = default)
+    {
+        Subscriber subscriber = Subscriber.Create("Default", "http://localhost:3000");
+        if (!await _dbContext.Subscribers.AnyAsync(x => x.Name == subscriber.Name && x.Url == subscriber.Url, cancellationToken))
+            await _dbContext.Subscribers.AddAsync(subscriber, cancellationToken);
     }
 }
