@@ -34,8 +34,3 @@ services:
     ports:
       - "5672:5672"
       - "15672:15672"
-
-  bb:
-   container_name: busybox
-   image: busybox:latest
-   command: sleep 3000
