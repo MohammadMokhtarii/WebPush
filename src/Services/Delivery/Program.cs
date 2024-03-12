@@ -1,27 +1,32 @@
-using Delivery;
+using Delivery.Infrastructure.MessageQueues;
 using RabbitMQ.Client;
-using RabbitMQ.Client.Events;
-using System.Text;
 
-var builder = Host.CreateApplicationBuilder(args);
-builder.Services.AddHostedService<Worker>();
-
-
-var factory = new ConnectionFactory { HostName = "rabbitmq", Port = 5672 };
-var connection = factory.CreateConnection();
-using var channel = connection.CreateModel();
-
-var consumer = new EventingBasicConsumer(channel);
-consumer.Received += (model, eventArgs) =>
-{
-    var body = eventArgs.Body.ToArray();
-    var message = Encoding.UTF8.GetString(body);
-    Console.WriteLine(message);
-};
-
-
+var builder = Host.CreateDefaultBuilder(args)
+    .ConfigureServices((context, services) =>
+    {
+        services.AddTransient<IMessageConsumer, MessageConsumer>();
+        services.AddTransient(serviceProvider =>
+        {
+            //var setting = builder.Configuration.GetSection("App:MessageQueueSettings").Get<MessageQueueSettings>();
+            ConnectionFactory factory = new()
+            {
+                Uri = new Uri("amqp://guest:guest@localhost:5672"),
+                ClientProvidedName = $"Ava Push System - {Environment.MachineName}"
+            };
+            IConnection connection = factory.CreateConnection();
+            IModel channel = connection.CreateModel();
+            return channel;
+        });
+    });
 
 var host = builder.Build();
+
+var messageConsumer = host.Services.GetRequiredService<IMessageConsumer>();
+
+messageConsumer.Consume(async (string body) =>
+{
+    Console.WriteLine(body);
+});
 host.Run();
 
 

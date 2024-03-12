@@ -30,7 +30,7 @@
     <PackageVersion Include="Elastic.Apm.NetCoreAll" Version="1.26.0" />
     <PackageVersion Include="Serilog.AspNetCore" Version="8.0.1" />
     <PackageVersion Include="Elastic.Apm.SerilogEnricher" Version="8.6.1" />
-    <PackageVersion Include="Serilog.Sinks.RabbitMQ" Version="6.0.0" />
+    <PackageVersion Include="Serilog.Sinks.RabbitMQ" Version="6.8.1" />
     <PackageVersion Include="Serilog.Enrichers.Environment" Version="2.3.0" />
     <PackageVersion Include="Serilog.Enrichers.Process" Version="2.0.2" />
     <PackageVersion Include="Serilog.Enrichers.Thread" Version="3.1.0" />
