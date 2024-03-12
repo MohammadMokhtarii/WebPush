@@ -10,13 +10,13 @@ public class AddSubscriberCommandHandler(IUnitOfWork uow, ISubscriberRepository 
     public async Task<Result<int>> Handle(AddSubscriberCommand request, CancellationToken cancellationToken)
     {
         var model = Subscriber.Create(request.Name, request.WebsiteUrl);
-        if (model.IsFailure)
-            return model.Error;
 
-        await _subscriberRepository.AddAsync(model.Data);
+        await _subscriberRepository.AddAsync(model);
+
         var dbResult = await _uow.SaveChangesAsync(cancellationToken);
         if (dbResult.IsFailure)
             return dbResult.Error;
-        return model.Data.Id.Value;
+
+        return model.Id.Value;
     }
 }

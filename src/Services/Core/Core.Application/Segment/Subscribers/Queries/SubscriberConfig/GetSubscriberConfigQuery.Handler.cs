@@ -8,11 +8,7 @@ public sealed class GetSubscriberConfigQueryHandler(ISubscriberRepository subscr
     private readonly ISubscriberRepository _subscriberRepository = subscriberRepository;
     public async Task<Result<SubscriberConfigDto>> Handle(GetSubscriberConfigQuery request, CancellationToken cancellationToken)
     {
-        var url = WebsiteUrl.Create(request.Url);
-        if (url.IsFailure)
-            return url.Error;
-
-        var subscriber = await _subscriberRepository.FindAsync(url.Data, cancellationToken);
+        var subscriber = await _subscriberRepository.FindAsync(WebsiteUrl.Create(request.Url), cancellationToken);
         if (subscriber is null || subscriber.InActive)
             return SegmentApplicationErrors.InvalidSubscriber;
 

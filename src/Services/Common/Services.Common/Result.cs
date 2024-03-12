@@ -28,10 +28,10 @@ public record Result()
 }
 public record Result<TResult> : Result
 {
-    private Result(TResult data) => this.Data = data;
+    private Result(TResult data) => Data = data;
     private Result(Error error) : base(error) { }
 
-    public TResult Data { get; private set; }
+    public TResult Data { get; private set; } = default!;
 
     public static Result<TResult> Success(TResult data) => new(data);
     public static new Result<TResult> Failure(Error error) => new(error);

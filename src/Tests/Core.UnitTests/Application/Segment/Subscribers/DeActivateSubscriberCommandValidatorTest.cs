@@ -57,7 +57,7 @@ public class DeActivateSubscriberCommandValidatorTest
         string subscriberName = "FakeName";
         string url = "https://example.com";
         DeActivateSubscriberCommand command = new(new SubscriberId(id));
-        Subscriber subscriber = Subscriber.Create(subscriberName, url).Data;
+        Subscriber subscriber = Subscriber.Create(subscriberName, url);
         subscriber.DeActivate();
         _subscriberRepository.ExistsAsync(Arg.Any<SubscriberId>(), default).Returns(true);
         _subscriberRepository.FindAsync(Arg.Any<SubscriberId>(), default).Returns(subscriber);
@@ -80,7 +80,7 @@ public class DeActivateSubscriberCommandValidatorTest
         string subscriberName = "FakeName";
         string url = "https://example.com";
         DeActivateSubscriberCommand command = new(new SubscriberId(id));
-        Subscriber subscriber = Subscriber.Create(subscriberName, url).Data;
+        Subscriber subscriber = Subscriber.Create(subscriberName, url);
 
         _subscriberRepository.ExistsAsync(Arg.Any<SubscriberId>(), default).Returns(true);
         _subscriberRepository.FindAsync(Arg.Any<SubscriberId>(), default).Returns(subscriber);

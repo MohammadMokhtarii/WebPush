@@ -1,5 +1,4 @@
 ﻿using Core.Domain.Segment;
-using Services.Common;
 
 namespace Core.Domain.Push;
 
@@ -21,7 +20,7 @@ public sealed class Notification : Entity, IAggregateRoot
     public NotificationId Id { get; private set; }
 
     public DeviceId DeviceId { get; private set; }
-    public Device Device { get; private set; }
+    public Device Device { get; private set; } = default!;
     public NotificationPayload Body { get; private set; }
     public NotificationStatus NotificationStatusId { get; private set; }
     public DateTime CreatedOnUtc { get; private set; }
@@ -29,14 +28,7 @@ public sealed class Notification : Entity, IAggregateRoot
     public IReadOnlyCollection<NotificationActivity> NotificationActivities => _notificationActivities;
     public IReadOnlyCollection<NotificationEvent> NotificationEvents => _notificationEvents;
 
-    public static Result<Notification> Create(DeviceId deviceId, string title, string message)
-    {
-        var payload = NotificationPayload.Create(title, message);
-        if (payload.IsFailure)
-            return payload.Error;
-
-        return new Notification(deviceId, payload.Data);
-    }
+    public static Notification Create(DeviceId deviceId, string title, string message) => new(deviceId, NotificationPayload.Create(title, message));
 
     public void ChangeStatus(NotificationStatus notificationStatusId, string description)
     {

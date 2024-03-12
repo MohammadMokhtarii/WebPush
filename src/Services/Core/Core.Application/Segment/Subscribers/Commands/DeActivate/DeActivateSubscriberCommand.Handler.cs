@@ -13,9 +13,7 @@ public class DeActivateSubscriberCommandHandler(IUnitOfWork uow, ISubscriberRepo
         if (model is null)
             return SegmentApplicationErrors.InvalidSubscriber;
 
-        var result = model.DeActivate();
-        if (result.IsFailure)
-            return result.Error;
+        model.DeActivate();
 
         var dbResult = await _uow.SaveChangesAsync(cancellationToken);
         if (dbResult.IsFailure)

@@ -15,7 +15,7 @@ public sealed class NotificationActivity : Entity
 
     public NotificationId NotificationId { get; private set; }
     public NotificationStatus NotificationStatusId { get; private set; }
-    public string Description { get; private set; }
+    public string Description { get; private set; } = default!;
     public DateTime CreatedOnUtc { get; private set; }
 
     public static NotificationActivity Create(NotificationId notificationId, NotificationStatus notificationStatusId, string description) => new(notificationId, notificationStatusId, description);

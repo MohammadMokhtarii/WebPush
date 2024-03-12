@@ -1,6 +1,8 @@
 ﻿using Core.Application.Common;
 using Core.Application.Segment;
+using Core.Domain.Exceptions;
 using Core.Domain.Segment;
+using NSubstitute.ExceptionExtensions;
 using Services.Common;
 
 namespace Core.UnitTests.Application.Segment.Subscribers;
@@ -20,20 +22,18 @@ public class AddSubscriberCommandHandlerTest
 
 
     [Fact]
-    public async Task Handle_Should_ReturnValidationError_When_SubscriberIsInvalid()
+    public async Task Handle_Should_ReturnValidationError_When_SubscriberUrlIsInvalid()
     {
         //Arrange   
         string subscriberName = "";
-        string url = "http://example.com";
+        string url = "http://example@com";
         AddSubscriberCommand command = new(subscriberName, url);
 
         //Act
-        var result = await _handler.Handle(command, default);
+        var result = async () => await _handler.Handle(command, default);
 
         //Assert
-
-        result.IsFailure.Should().BeTrue();
-        result.Error.Should().Be(SegmentDomainErrors.Subscriber.WebsiteUrl.InvalidUrl);
+        await result.Should().ThrowAsync<SubscriberUrlIsInvalidDomainException>();
     }
 
     [Fact]

@@ -1,4 +1,5 @@
 ﻿using Core.Application.Segment;
+using Core.Domain.Exceptions;
 using Core.Domain.Segment;
 using Services.Common;
 
@@ -23,11 +24,11 @@ public class GetSubscriberConfigQueryTest
         string url = "http:dd//Example.com";
         GetSubscriberConfigQuery command = new(url);
         //Act
-        var result = await _handler.Handle(command, default);
+        var result = async () => await _handler.Handle(command, default);
 
         //Assert
-        result.IsFailure.Should().BeTrue();
-        result.Error.Should().Be(SegmentDomainErrors.Subscriber.WebsiteUrl.InvalidUrl);
+        await result.Should().ThrowAsync<SubscriberUrlIsInvalidDomainException>();
+
     }
 
 
@@ -57,7 +58,7 @@ public class GetSubscriberConfigQueryTest
         //Arrange   
         string url = "https://Example.com";
         GetSubscriberConfigQuery command = new(url);
-        Subscriber subscriber = Subscriber.Create("FakeName", url).Data;
+        Subscriber subscriber = Subscriber.Create("FakeName", url);
         subscriber.DeActivate();
 
         _subscriberRepository.FindAsync(Arg.Any<WebsiteUrl>()).Returns(subscriber);
@@ -78,7 +79,7 @@ public class GetSubscriberConfigQueryTest
         //Arrange   
         string url = "https://Example.com";
         GetSubscriberConfigQuery command = new(url);
-        Subscriber subscriber = Subscriber.Create("FakeName", url).Data;
+        Subscriber subscriber = Subscriber.Create("FakeName", url);
 
         _subscriberRepository.FindAsync(Arg.Any<WebsiteUrl>()).Returns(subscriber);
 

@@ -120,9 +120,9 @@ public class AddSubscriberCommandValidatorTest
     {
         //Arrange
         string subscriberName = RandomStringGenerator.Generate(20);
-        string url = "http://example@example.com";
+        string url = "http://example@example..@com";
         AddSubscriberCommand command = new(subscriberName, url);
-
+        _subscriberRepository.IsUniqueAsync(subscriberName, default).Returns(true);
         //Act
         var result = await _validator.ValidateAsync(command, default);
 

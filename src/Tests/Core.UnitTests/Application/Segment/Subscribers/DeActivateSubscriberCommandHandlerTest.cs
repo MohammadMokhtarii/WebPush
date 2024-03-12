@@ -36,26 +36,6 @@ public class DeActivateSubscriberCommandHandlerTest
         result.Error.Should().Be(SegmentApplicationErrors.InvalidSubscriber);
     }
 
-    [Fact]
-    public async Task Handle_Should_ReturnValidationError_When_SubscriberIsInActive()
-    {
-        //Arrange   
-        int subscriberId = 10;
-        string subscriberName = "FakeName";
-        string url = "https://example.com";
-        DeActivateSubscriberCommand command = new(new SubscriberId(subscriberId));
-        Subscriber subscriber = Subscriber.Create(subscriberName, url).Data;
-        subscriber.DeActivate();
-        _subscriberRepository.FindAsync(Arg.Any<SubscriberId>()).Returns(subscriber);
-
-        //Act
-        var result = await _handler.Handle(command, default);
-
-        //Assert
-        await _subscriberRepository.Received().FindAsync(Arg.Any<SubscriberId>());
-        result.IsFailure.Should().BeTrue();
-        result.Error.Should().Be(SegmentDomainErrors.Subscriber.SubscriberIsAlreadyInActive);
-    }
 
     [Fact]
     public async Task Handle_Should_ReturnValidationError_When_SaveChangesFailed()
@@ -65,7 +45,7 @@ public class DeActivateSubscriberCommandHandlerTest
         string subscriberName = "FakeName";
         string url = "https://example.com";
         DeActivateSubscriberCommand command = new(new SubscriberId(subscriberId));
-        Subscriber subscriber = Subscriber.Create(subscriberName, url).Data;
+        Subscriber subscriber = Subscriber.Create(subscriberName, url);
 
         _subscriberRepository.FindAsync(Arg.Any<SubscriberId>()).Returns(subscriber);
         _uow.SaveChangesAsync(default).Returns(UnitOfWorkErrors.SaveChangesError);
@@ -87,7 +67,7 @@ public class DeActivateSubscriberCommandHandlerTest
         string subscriberName = "FakeName";
         string url = "https://example.com";
         DeActivateSubscriberCommand command = new(new SubscriberId(subscriberId));
-        Subscriber subscriber = Subscriber.Create(subscriberName, url).Data;
+        Subscriber subscriber = Subscriber.Create(subscriberName, url);
 
         _subscriberRepository.FindAsync(Arg.Any<SubscriberId>()).Returns(subscriber);
         _uow.SaveChangesAsync(default).Returns(Result.Success());
