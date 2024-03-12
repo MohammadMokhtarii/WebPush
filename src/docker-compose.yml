@@ -13,7 +13,15 @@ services:
     depends_on:
       - rabbitmq
       - db
-
+  delivery:
+    image: ${DOCKER_REGISTRY-}dlselivery
+    build:
+      context: .
+      dockerfile: Services/Delivery/Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    depends_on:
+      - rabbitmq
   db:
     container_name: pushdb
     image: mcr.microsoft.com/mssql/server:2022-latest
