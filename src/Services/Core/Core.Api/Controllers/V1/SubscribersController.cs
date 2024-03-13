@@ -12,8 +12,5 @@ public class SubscribersController(ISender sender) : BaseController
 
     [HttpGet]
     public async Task<IActionResult> ConfigAsync(CancellationToken cancellationToken)
-    {
-        var url = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}";
-        return Ok(await _sender.Send(new GetSubscriberConfigQuery(url), cancellationToken));
-    }
+        => Ok(await _sender.Send(new GetSubscriberConfigQuery(HttpContext.Request.Headers.Origin), cancellationToken));
 }
