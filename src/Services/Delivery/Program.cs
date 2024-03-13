@@ -1,6 +1,6 @@
-using Delivery.Infrastructure.MessageQueues;
-using Delivery.Infrastructure.Notification;
 using Delivery.Model;
+using Delivery.Model.Infrastructure.MessageQueues.Adapter;
+using Delivery.Model.Services.Notification;
 
 var builder = Host.CreateDefaultBuilder(args)
     .ConfigureServices((context, services) =>

@@ -2,7 +2,7 @@
 using RabbitMQ.Client.Events;
 using System.Text;
 
-namespace Delivery.Infrastructure.MessageQueues
+namespace Delivery.Model.Infrastructure.MessageQueues.Adapter
 {
     public class MessageConsumer : IMessageConsumer
     {

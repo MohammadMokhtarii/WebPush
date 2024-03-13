@@ -1,6 +1,6 @@
-﻿using Delivery.Infrastructure.MessageQueues;
-using Delivery.Infrastructure.Notification;
-using Delivery.Model.Dto;
+﻿using Delivery.Model.Dto;
+using Delivery.Model.Infrastructure.MessageQueues.Adapter;
+using Delivery.Model.Services.Notification;
 using RabbitMQ.Client;
 
 namespace Delivery.Model

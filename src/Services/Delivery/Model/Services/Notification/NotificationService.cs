@@ -1,5 +1,4 @@
-﻿
-namespace Delivery.Infrastructure.Notification
+﻿namespace Delivery.Model.Services.Notification
 {
     public class NotificationService : INotificationService
     {

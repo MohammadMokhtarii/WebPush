@@ -1,4 +1,4 @@
-﻿namespace Delivery.Infrastructure.MessageQueues
+﻿namespace Delivery.Model.Infrastructure.MessageQueues.Adapter
 {
     public interface IMessageConsumer
     {
