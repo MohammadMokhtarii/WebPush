@@ -27,6 +27,7 @@ namespace Delivery.Model.Infrastructure.MessageQueues.Adapter
                 var body = Encoding.UTF8.GetString(args.Body.ToArray());
                 onRecieved(body.ToString()).Wait();
                 _channel.BasicAck(args.DeliveryTag, false);
+
             };
             _channel.BasicConsume(QueueName, false, consumer);
         }
