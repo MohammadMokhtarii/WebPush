@@ -1,23 +1,13 @@
-using Delivery.Model;
-using Delivery.Model.Infrastructure.MessageQueues;
-using Delivery.Model.Services.Notification;
+using Delivery.Core;
 
 var builder = Host.CreateDefaultBuilder(args)
     .ConfigureServices((context, services) =>
     {
-        services.RegisterServices(context.Configuration);
+        services.AddHostedService<ProcessNotificationJob>();
+        services.AddSingleton<IPushNotificationAdapter, PushNotificationAdapter>();
     });
+
 var host = builder.Build();
-
-var messageConsumer = host.Services.GetRequiredService<IMessageConsumer>();
-var notificationService = host.Services.GetRequiredService<INotificationService>();
-
-messageConsumer.Consume(async (string body) =>
-{
-    Console.WriteLine(body);
-    await notificationService.PushNotification();
-});
-
 host.Run();
 
 

@@ -99,7 +99,7 @@ public class ProcessNotificationJob : IJob
         ConnectionFactory factory = new()
         {
             Uri = new(connectionString),
-            ClientProvidedName = $"Ava Push System - {Environment.MachineName}"
+            ClientProvidedName = $"WebPush Producer- {Environment.MachineName}"
         };
         return factory;
     }
