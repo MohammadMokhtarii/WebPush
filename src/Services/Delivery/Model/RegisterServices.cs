@@ -1,5 +1,4 @@
-﻿using Delivery.Model.Dto;
-using Delivery.Model.Infrastructure.MessageQueues.Adapter;
+﻿using Delivery.Model.Infrastructure.MessageQueues.Adapter;
 using Delivery.Model.Services.Notification;
 using RabbitMQ.Client;
 
@@ -14,10 +13,11 @@ namespace Delivery.Model
             services.AddTransient<INotificationService, NotificationService>();
             services.AddTransient(serviceProvider =>
             {
-                var setting = context.Configuration.GetSection("MessageQueueSettings").Get<MessageQueueSettings>();
+                string? connectionString = context.Configuration.GetConnectionString("MessageQueue");
+                ArgumentNullException.ThrowIfNull(connectionString);
                 ConnectionFactory factory = new()
                 {
-                    Uri = new Uri(setting.Url),
+                    Uri = new Uri(connectionString),
                     ClientProvidedName = $"Ava Push System - {Environment.MachineName}"
                 };
                 IConnection connection = factory.CreateConnection();
