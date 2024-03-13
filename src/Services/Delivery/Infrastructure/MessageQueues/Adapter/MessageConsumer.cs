@@ -22,13 +22,10 @@ namespace Delivery.Infrastructure.MessageQueues
         public void Consume(Func<string, Task> onRecieved)
         {
             var consumer = new EventingBasicConsumer(_channel);
-
             consumer.Received += (sender, args) =>
             {
                 var body = Encoding.UTF8.GetString(args.Body.ToArray());
-
                 onRecieved(body.ToString()).Wait();
-
                 _channel.BasicAck(args.DeliveryTag, false);
             };
             _channel.BasicConsume(QueueName, false, consumer);

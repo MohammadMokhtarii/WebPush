@@ -1,32 +1,23 @@
 using Delivery.Infrastructure.MessageQueues;
-using RabbitMQ.Client;
+using Delivery.Infrastructure.Notification;
+using Delivery.Model;
 
 var builder = Host.CreateDefaultBuilder(args)
     .ConfigureServices((context, services) =>
     {
-        services.AddTransient<IMessageConsumer, MessageConsumer>();
-        services.AddTransient(serviceProvider =>
-        {
-            //var setting = builder.Configuration.GetSection("App:MessageQueueSettings").Get<MessageQueueSettings>();
-            ConnectionFactory factory = new()
-            {
-                Uri = new Uri("amqp://guest:guest@localhost:5672"),
-                ClientProvidedName = $"Ava Push System - {Environment.MachineName}"
-            };
-            IConnection connection = factory.CreateConnection();
-            IModel channel = connection.CreateModel();
-            return channel;
-        });
+        services.RegisterServices(context);
     });
 
 var host = builder.Build();
 
 var messageConsumer = host.Services.GetRequiredService<IMessageConsumer>();
+var notificationService = host.Services.GetRequiredService<INotificationService>();
 
 messageConsumer.Consume(async (string body) =>
 {
-    Console.WriteLine(body);
+    await notificationService.PushNotification();
 });
+
 host.Run();
 
 
