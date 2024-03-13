@@ -2,22 +2,22 @@
 using RabbitMQ.Client.Events;
 using System.Text;
 
-namespace Delivery.Model.Infrastructure.MessageQueues.Adapter
+namespace Delivery.Model.Infrastructure.MessageQueues
 {
     public class MessageConsumer : IMessageConsumer
     {
         readonly IModel _channel;
 
-        protected string ExchangeName => "Ava-Exchange-System";
-        protected string RoutingKey => "Ava-Routing-Key";
-        protected string QueueName => "Ava-Queue";
+        //protected string ExchangeName => "Ava-Exchange-System";
+        //protected string RoutingKey => "Ava-Routing-Key";
+        protected string QueueName => "Push";
 
         public MessageConsumer(IModel channel)
         {
             _channel = channel;
-            _channel.ExchangeDeclare(ExchangeName, ExchangeType.Direct);
+            //_channel.ExchangeDeclare(ExchangeName, ExchangeType.Direct);
             _channel.QueueDeclare(QueueName, false, false, false, null);
-            _channel.QueueBind(QueueName, ExchangeName, RoutingKey, null);
+            //_channel.QueueBind(QueueName, ExchangeName, RoutingKey, null);
         }
         public void Consume(Func<string, Task> onRecieved)
         {
