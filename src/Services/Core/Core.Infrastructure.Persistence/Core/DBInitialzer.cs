@@ -43,7 +43,7 @@ public class DBInitialzer : BackgroundService
 
     private async Task SeedSubscriberAsync(CancellationToken cancellationToken = default)
     {
-        Subscriber subscriber = Subscriber.Create("Default", "http://localhost:3000");
+        Subscriber subscriber = Subscriber.Create("Default", "http://example.com");
         if (!await _dbContext.Subscribers.AnyAsync(x => x.Name == subscriber.Name && x.Url == subscriber.Url, cancellationToken))
             await _dbContext.Subscribers.AddAsync(subscriber, cancellationToken);
     }

@@ -16,7 +16,16 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 builder.Services.AddProblemDetails();
-
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(corsBuilder =>
+    {
+        corsBuilder.WithOrigins(builder.Configuration["AllowedOrgin"].Split(";"))
+        .AllowAnyHeader()
+        .AllowAnyMethod()
+        .AllowCredentials();
+    });
+});
 
 builder.Services.ConfigureApplication()
                 .ConfigurePresistence()
@@ -54,7 +63,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 app.UseServiceDefaults();
-
+app.UseCors();
 app.UseExceptionHandler();
 app.UseAuthorization();
 
