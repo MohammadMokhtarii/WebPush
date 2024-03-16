@@ -14,7 +14,7 @@ services:
       - rabbitmq
       - db
   delivery:
-    image: ${DOCKER_REGISTRY-}dlselivery
+    image: ${DOCKER_REGISTRY-}delivery
     build:
       context: .
       dockerfile: Services/Delivery/Dockerfile
