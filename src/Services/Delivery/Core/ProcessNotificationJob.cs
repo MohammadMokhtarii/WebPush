@@ -10,7 +10,6 @@ public class ProcessNotificationJob : BackgroundService
     private readonly IPushNotificationAdapter _pushNotificationAdapter;
 
     private IConnection _connection;
-    private IModel _channel;
 
 
     public ProcessNotificationJob(IConfiguration configuration, IPushNotificationAdapter pushNotificationAdapter)
@@ -24,6 +23,8 @@ public class ProcessNotificationJob : BackgroundService
     {
         foreach (var number in Enumerable.Range(1, 10))
         {
+            var _channel = _connection.CreateModel();
+            _channel.BasicQos(0, 100, false);
             var consumer = new AsyncEventingBasicConsumer(_channel);
             consumer.Received += async (sender, args) =>
             {
@@ -33,9 +34,7 @@ public class ProcessNotificationJob : BackgroundService
 
                 _channel.BasicAck(args.DeliveryTag, false);
             };
-
             _channel.BasicConsume(consumer, "Push");
-
         }
     }
 
@@ -53,13 +52,10 @@ public class ProcessNotificationJob : BackgroundService
         };
 
         _connection = factory.CreateConnection();
-        _channel = _connection.CreateModel();
-        _channel.BasicQos(0, 100, false);
     }
 
     public override void Dispose()
     {
-        _channel.Dispose();
         _connection.Dispose();
         base.Dispose();
         GC.SuppressFinalize(this);
