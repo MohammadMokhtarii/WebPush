@@ -96,7 +96,11 @@ public class ProcessNotificationJob : IJob
         string? connectionString = _configuration.GetConnectionString("MessageQueue");
         ArgumentNullException.ThrowIfNull(connectionString);
 
-        ConnectionFactory factory = new() { Uri = new(connectionString) };
+        ConnectionFactory factory = new()
+        {
+            Uri = new(connectionString),
+            ClientProvidedName = $"WebPush Producer- {Environment.MachineName}"
+        };
         return factory;
     }
 }
